@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Editor</title>
+    <link rel="stylesheet" href="editor.css">
+    <script src="Cell.js" charset="utf-8"></script>
+    <script src="editor.js" charset="utf-8" defer></script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div id="panel">
+      <input type="text" id="loadMap" value="" placeholder="map file to load">
+      <button type="button" id="load">Load</button>
+      <br>
+      <canvas id="tilesetcanvas"></canvas>
+      <span id="tile"></span>
+      <br>
+      <button type="button" id="export">Export terrain</button>
+      <br>
+      <span id="dl"></span>
+    </div>
+  </body>
+</html>
