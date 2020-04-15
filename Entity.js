@@ -29,10 +29,21 @@ class Entity {
 
   get adjTiles() {
     return {
-      up:    (this.cell.terrain[this.z][this.y - 1] || "")[this.x],
-      down:  (this.cell.terrain[this.z][this.y + 1] || "")[this.x],
-      right: (this.cell.terrain[this.z][this.y]     || "")[this.x + 1],
-      left:  (this.cell.terrain[this.z][this.y]     || "")[this.x - 1]
+      on:    Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x]],
+      up:    Tile.list[(this.cell.terrain[this.z][this.y - 1] || "")[this.x]],
+      down:  Tile.list[(this.cell.terrain[this.z][this.y + 1] || "")[this.x]],
+      right: Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x + 1]],
+      left:  Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x - 1]],
+    };
+  }
+
+  get belowTiles() {
+    return {
+      on:    Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y]     || "")[this.x]],
+      up:    Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y - 1] || "")[this.x]],
+      down:  Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y + 1] || "")[this.x]],
+      right: Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y]     || "")[this.x + 1]],
+      left:  Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y]     || "")[this.x - 1]],
     };
   }
 
@@ -40,17 +51,21 @@ class Entity {
     let x = this.x * 32;
     let y = this.y * 32;
     if(this.going.up > 0) {
-      y += (this.going.up--) * (32 / this.speed);
+      y += (this.going.up--) * (32 / this.speed) - 32;
       this.frame = (this.going.up % 3) + D.up - 1;
+      if(this.going.up === 0) this.afterMove(D.up);
     } else if(this.going.down > 0) {
-      y -= (this.going.down--) * (32 / this.speed);
+      y -= (this.going.down--) * (32 / this.speed) - 32;
       this.frame = (this.going.down % 3) + D.down - 1;
+      if(this.going.down === 0) this.afterMove(D.down);
     } else if(this.going.left > 0) {
-      x += (this.going.left--) * (32 / this.speed);
+      x += (this.going.left--) * (32 / this.speed) - 32;
       this.frame = (this.going.left % 3) + D.left - 1;
+      if(this.going.left === 0) this.afterMove(D.left);
     } else if(this.going.right > 0) {
-      x -= (this.going.right--) * (32 / this.speed);
+      x -= (this.going.right--) * (32 / this.speed) - 32;
       this.frame = (this.going.right % 3) + D.right - 1;
+      if(this.going.right === 0) this.afterMove(D.right);
     } else {
       this.frame = this.facing;
     }
@@ -62,26 +77,40 @@ class Entity {
     this.sprite.drawFrame(Cell.ctx, this.frame, this.animX, this.animY);
   }
 
+  afterMove(dir) {
+    if(dir === D.up) {
+      this.y--;
+    } else if(dir === D.down) {
+      this.y++;
+    } else if(dir === D.left) {
+      this.x--;
+    } else if(dir === D.right) {
+      this.x++;
+    }
+    if(this.belowTiles.on && this.belowTiles.on.stairs)
+      this.cell.moveEntity(this, this.x, this.y, this.z - 1);
+  }
+
   canMove(dir) {
-    for(let go of Object.values(this.going)) {
-      if(go > 0) return false;
+    for(let going of Object.values(this.going)) {
+      if(going > 0) return false;
     }
 
     if(dir === D.up) {
-      return Tile.notNull(this.adjTiles.up);
+      return this.adjTiles.up || (this.belowTiles.up && this.belowTiles.up.stairs);
     } else if(dir === D.down) {
-      return Tile.notNull(this.adjTiles.down);
+      return this.adjTiles.down || (this.belowTiles.down && this.belowTiles.down.stairs);
     } else if(dir === D.left) {
-      return Tile.notNull(this.adjTiles.left);
+      return this.adjTiles.left || (this.belowTiles.left && this.belowTiles.left.stairs);
     } else if(dir === D.right) {
-      return Tile.notNull(this.adjTiles.right);
+      return this.adjTiles.right || (this.belowTiles.right && this.belowTiles.right.stairs);
     }
   }
 
   move(dir) {
     if(this.facing !== dir) {
       this.facing = dir;
-    } else if(this.canMove(dir)) {
+    } else if(this.canMove(dir) || (this.adjTiles.on && this.adjTiles.on.stairs === dir)) {
       this.going = {
         up: 0,
         down: 0,
@@ -90,16 +119,15 @@ class Entity {
       };
       if(dir === D.up) {
         this.going.up = this.speed;
-        this.y--;
       } else if(dir === D.down) {
         this.going.down = this.speed;
-        this.y++;
       } else if(dir === D.left) {
         this.going.left = this.speed;
-        this.x--;
       } else if(dir === D.right) {
         this.going.right = this.speed;
-        this.x++;
+      }
+      if(this.adjTiles.on.stairs === dir) {
+        this.cell.moveEntity(this, this.x, this.y, this.z + 1);
       }
     }
   }

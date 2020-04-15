@@ -1,29 +1,26 @@
 class Tile {
-  static loadList(list, callback) {
+  static load(list, callback) {
     let nbToLoad = list.length;
     for(let tile of list) {
       let image = new Image();
-      image.src = "./tiles/" + tile + ".png";
+      image.src = "./tiles/" + tile.id + ".png";
       image.onload = () =>  {
-        new Tile(image);
-        console.log("Loaded tile " + tile);
+        new Tile(image, tile);
+        console.log("Loaded tile " + tile.id);
         --nbToLoad === 0 && callback();
       }
     }
   }
 
-  static notNull(string) {
-    return !(string === "" || string === undefined || string === null);
-  }
-
-  constructor(image) {
+  constructor(image, param) {
     this.image = image;
-    this.name = /[^/]*$/.exec(this.image.src)[0].slice(0, -4);
-    Tile.list[this.name] = this;
+    //this.name = /[^/]*$/.exec(this.image.src)[0].slice(0, -4);
+    for(let p in param) this[p] = param[p];
+    Tile.list[this.id] = this;
   }
 
   draw(ctx, x, y) {
     ctx.drawImage(this.image, x, y, 32, 32);
   }
 }
-Tile.list = {};
+Tile.list = {"":false};

@@ -1,19 +1,20 @@
-Tile.loadList([
-  "tile000",
-  "tile001",
-  "tile003",
-  "tile005",
-  "tile006",
-  "tile007",
-  "tile008",
-  "tile009",
-  "tile010",
-  "tile011",
-  "tile012",
-  "tile013",
+Tile.load([
+  {id:"tile000"},
+  {id:"tile001"},
+  {id:"tile003"},
+  {id:"tile005"},
+  {id:"tile006"},
+  {id:"tile007"},
+  {id:"tile008"},
+  {id:"tile009"},
+  {id:"tile010"},
+  {id:"tile011"},
+  {id:"tile012"},
+  {id:"tile013"},
+  {id:"stairs-up", stairs: D.up},
 ],()=>{
   console.log("All tiles loaded !");
-  Spritesheet.loadList([
+  Spritesheet.load([
     "player",
     "dog"
   ],()=>{
@@ -22,23 +23,26 @@ Tile.loadList([
   });
 });
 
+let map, player, dog;
+
 function begin() {
-  let map = new Cell("test");
-  let player = new Player("player");
-  let dog = new Entity("dog");
-  map.addEntity(player, 0, 0, 0);
+  map = new Cell("test");
+  player = new Player("player");
+  dog = new Entity("dog");
+
+  map.addEntity(player, 0, 9, 0);
   map.addEntity(dog, 3, 5, 0);
 
   const canvas = document.getElementById("mainframe");
-  CTX = canvas.getContext("2d");
-  Cell.ctx = CTX;
+  Cell.ctx = canvas.getContext("2d");
   canvas.width = document.documentElement.clientWidth;
   canvas.height = document.documentElement.clientHeight;
 
   //CTX.fillStyle = "rgba(0, 0, 0, 0.8)";
+  //CTX.fillRect(0, 0, canvas.width, canvas.height);
   setInterval(() => {
-    CTX.clearRect(0, 0, canvas.width, canvas.height);
+    Cell.ctx.clearRect(0, 0, canvas.width, canvas.height);
     map.draw();
-    //CTX.fillRect(0, 0, canvas.width, canvas.height);
+    console.log(player.x+":"+player.y+":"+player.z);
   }, 1000 / 30);
 }
