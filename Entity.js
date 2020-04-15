@@ -1,35 +1,42 @@
 const D = {up: 11, down: 2, left: 5, right: 8};
 
 class Entity {
-  constructor(sprite, x, y) {
-    this.x = x; // tile coordinates, not pixels
-    this.y = y;
-    this.frame = 2;
-    this.map = null;
-
+  constructor(spriteName) {
+    this.x = null; // tile coordinates, not pixels
+    this.y = null;
+    this.z = null;
+    this.cell = null;
+    this.animX = null;
+    this.animY = null;
     this.facing = D.down;
-
+    this.frame = 2;
     this.speed = 8;
+    this.sprite = Spritesheet.list[spriteName];
     this.going = {
       up: 0,
       down: 0,
       left: 0,
       right: 0
     };
+  }
 
-    this.sprite = new Tileset("sprites/" + sprite);
+  setCell(cell, x, y, z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.cell = cell;
   }
 
   get adjTiles() {
     return {
-      up: (this.map.terrain[this.y - 1] || {})[this.x],
-      down: (this.map.terrain[this.y + 1] || {})[this.x],
-      right: (this.map.terrain[this.y] || {})[this.x + 1],
-      left: (this.map.terrain[this.y] || {})[this.x - 1]
+      up:    (this.cell.terrain[this.z][this.y - 1] || "")[this.x],
+      down:  (this.cell.terrain[this.z][this.y + 1] || "")[this.x],
+      right: (this.cell.terrain[this.z][this.y]     || "")[this.x + 1],
+      left:  (this.cell.terrain[this.z][this.y]     || "")[this.x - 1]
     };
   }
 
-  draw() {
+  update() {
     let x = this.x * 32;
     let y = this.y * 32;
     if(this.going.up > 0) {
@@ -47,8 +54,12 @@ class Entity {
     } else {
       this.frame = this.facing;
     }
-    this.sprite.drawTile(Cell.ctx, this.frame, x, y);
-    //console.log(this.adjTiles);
+    this.animX = x;
+    this.animY = y;
+  }
+
+  draw() {
+    this.sprite.drawFrame(Cell.ctx, this.frame, this.animX, this.animY);
   }
 
   canMove(dir) {
@@ -57,19 +68,20 @@ class Entity {
     }
 
     if(dir === D.up) {
-      return this.adjTiles.up !== undefined && !this.adjTiles.up.wall;
+      return Tile.notNull(this.adjTiles.up);
     } else if(dir === D.down) {
-      return this.adjTiles.down !== undefined && !this.adjTiles.down.wall;
+      return Tile.notNull(this.adjTiles.down);
     } else if(dir === D.left) {
-      return this.adjTiles.left !== undefined && !this.adjTiles.left.wall;
+      return Tile.notNull(this.adjTiles.left);
     } else if(dir === D.right) {
-      return this.adjTiles.right !== undefined && !this.adjTiles.right.wall;
+      return Tile.notNull(this.adjTiles.right);
     }
   }
 
   move(dir) {
-    this.facing = dir;
-    if(this.canMove(dir)) {
+    if(this.facing !== dir) {
+      this.facing = dir;
+    } else if(this.canMove(dir)) {
       this.going = {
         up: 0,
         down: 0,
@@ -93,24 +105,36 @@ class Entity {
   }
 }
 
-class Follower extends Entity {
-  constructor(player) {
-    super("dog", player.x, player.y);
+class Player extends Entity {
+  constructor(sprite) {
+    super(sprite);
+    this.go = {
+      up: false,
+      down: false,
+      left: false,
+      right: false
+    }
+    document.addEventListener("keydown",(e)=>{
+           if(e.key === "z") this.go.up = true;
+      else if(e.key === "s") this.go.down = true;
+      else if(e.key === "q") this.go.left = true;
+      else if(e.key === "d") this.go.right = true;
+    });
+
+    document.addEventListener("keyup",(e)=>{
+           if(e.key === "z") this.go.up = false;
+      else if(e.key === "s") this.go.down = false;
+      else if(e.key === "q") this.go.left = false;
+      else if(e.key === "d") this.go.right = false;
+    });
   }
 
   update() {
-    // mannhattan : abs(Point.x - Goal.x) + abs(Point.y - Goal.y);
-  }
-}
+    super.update();
 
-class Player extends Entity {
-  constructor() {
-    super("player", 0, 0);
-    document.addEventListener("keydown",(e)=>{
-      if(e.key === "z") this.move(D.up);
-      else if(e.key === "s") this.move(D.down);
-      else if(e.key === "q") this.move(D.left);
-      else if(e.key === "d") this.move(D.right);
-    });
+    if(this.go.up) this.move(D.up);
+    else if(this.go.down) this.move(D.down);
+    else if(this.go.left) this.move(D.left);
+    else if(this.go.right) this.move(D.right);
   }
 }
