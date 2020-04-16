@@ -1,6 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
+  background-color: black;
 }
 
 #panel {
@@ -8,4 +9,16 @@ body {
   right: 0;
   top: 0;
   height: 100%;
+  width: 15%;
+  overflow-y: auto;
+  border-left: 1px solid white;
+  color: white;
+}
+
+#tilelist {
+  border-bottom: 1px solid white;
+}
+
+#exportOutput {
+  display: none;
 }

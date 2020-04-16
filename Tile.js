@@ -2,12 +2,18 @@ class Tile {
   static load(list, callback) {
     let nbToLoad = list.length;
     for(let tile of list) {
-      let image = new Image();
-      image.src = "./tiles/" + tile.id + ".png";
-      image.onload = () =>  {
-        new Tile(image, tile);
-        console.log("Loaded tile " + tile.id);
+      if(tile.id === "") {
+        new Tile(false, tile);
+        console.log("Loaded empty tile");
         --nbToLoad === 0 && callback();
+      } else {
+        let image = new Image();
+        image.src = "./tiles/" + tile.id + ".png";
+        image.onload = () =>  {
+          new Tile(image, tile);
+          console.log("Loaded tile " + tile.id);
+          --nbToLoad === 0 && callback();
+        }
       }
     }
   }
@@ -20,7 +26,8 @@ class Tile {
   }
 
   draw(ctx, x, y) {
-    ctx.drawImage(this.image, x, y, 32, 32);
+    if(this.image)
+      ctx.drawImage(this.image, x, y, 32, 32);
   }
 }
-Tile.list = {"":false};
+Tile.list = {};

@@ -4,21 +4,31 @@
     <meta charset="utf-8">
     <title>Editor</title>
     <link rel="stylesheet" href="editor.css">
+    <script src="Tile.js" charset="utf-8"></script>
+    <script src="Spritesheet.js" charset="utf-8"></script>
     <script src="Cell.js" charset="utf-8"></script>
+    <script src="loading.js" charset="utf-8"></script>
     <script src="editor.js" charset="utf-8" defer></script>
   </head>
-  <body>
+  <body oncontextmenu="return false;">
+    <div id="startmenu">
+      <input type="text" id="file" value="" placeholder="cell file">
+      <button type="button" id="load" onclick="loadCell(hud.file.value)">Load</button>
+      <br>
+      <button type="button" id="create" onclick="loadCell('empty')">Create new</button>
+    </div>
     <canvas id="canvas"></canvas>
     <div id="panel">
-      <input type="text" id="loadMap" value="" placeholder="map file to load">
-      <button type="button" id="load">Load</button>
-      <br>
-      <canvas id="tilesetcanvas"></canvas>
+      <canvas id="tilelist"></canvas>
+      <div>
+        <button type="button" id="levelUp">▲</button>
+        <span id="level"></span>
+        <button type="button" id="levelDown">▼</button>
+        <input type="checkbox" id="drawAll" checked onclick="drawCell()">
+      </div>
       <span id="tile"></span>
-      <br>
-      <button type="button" id="export">Export terrain</button>
-      <br>
-      <span id="dl"></span>
+      <button type="button" id="export">Export to clipboard</button>
+      <textarea id="exportOutput"></textarea>
     </div>
   </body>
 </html>

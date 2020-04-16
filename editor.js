@@ -1,48 +1,119 @@
-const hudElements = ["dl", "export", "loadMap", "load", "tilesetcanvas", "canvas", "tile"];
-
-let hud = {};
-
-for(let hudElem of hudElements) {
+const hud = {};
+for(let hudElem of ["canvas", "panel", "tilelist", "tile", "levelUp", "levelDown", "drawAll", "level", "startmenu", "file", "export", "exportOutput"]) {
   hud[hudElem] = document.getElementById(hudElem);
 }
 
-CTX = hud.canvas.getContext("2d");
-Cell.ctx = CTX;
-hud.canvas.width = document.documentElement.clientWidth;
-hud.canvas.height = document.documentElement.clientHeight;
-
-var MAP = null;
-var TILE = 1;
-
-hud.load.onclick = () => {
- MAP = new Cell(hud.loadMap.value, () => {
-   MAP.draw();
-   drawTileset(MAP.tileset);
- });
-
- hud.canvas.addEventListener("mousemove", function(e) {
-   MAP.draw();
-   drawHover(this, e);
- });
-
- hud.canvas.addEventListener("mouseout", function(e) {
-   MAP.draw();
- });
-
- hud.canvas.addEventListener("mousedown", function(e) {
-   let pos = getCursorTileXY(this, e);
-   MAP.terrain[pos.y][pos.x].id = TILE;
-   MAP.draw();
- });
-}
+var TILE = ["", "", "", "", ""];
+var CELL;
+var LEVEL;
 
 hud.export.onclick = () => {
+  cleanTerrainData();
   let data = {
-    tileset: MAP.tileset.name,
-    terrain: MAP.terrain
+    defaultLevel: CELL.defaultLevel,
+    terrain: CELL.terrain
   }
-  let b64data = btoa(JSON.stringify(data));
-  hud.dl.innerHTML = "<a download='map.json' href='data:application/octet-stream;charset=utf-16le;base64," + b64data +"'>download</a>";
+  let jsonData = JSON.stringify(data);
+  hud.exportOutput.innerHTML = jsonData;
+  console.log(jsonData);
+  hud.exportOutput.style.display = "block";
+  hud.exportOutput.select();
+  document.execCommand("copy");
+  hud.exportOutput.style.display = "none";
+  //let b64data = btoa(JSON.stringify(data));
+  //hud.dl.innerHTML = "<a download='map.json' href='data:application/octet-stream;charset=utf-16le;base64," + b64data +"'>download</a>";
+}
+
+hud.levelUp.onclick = () => {
+  LEVEL++;
+  drawCell();
+  hud.level.innerHTML = LEVEL;
+}
+
+hud.levelDown.onclick = () => {
+  if(LEVEL !== 0) {
+    LEVEL--;
+    drawCell();
+    hud.level.innerHTML = LEVEL;
+  }
+}
+
+function begin() {
+  hud.tilelist.ctx = hud.tilelist.getContext("2d");
+  let width = Math.floor(hud.panel.clientWidth / 32);
+  hud.tilelist.width = width * 32;
+  hud.tilelist.height = Math.ceil(Object.keys(Tile.list).length / width) * 32;
+
+  hud.tilelist.addEventListener("mousemove", function(e) {
+    drawListAndHover(this, e);
+  });
+
+  hud.tilelist.addEventListener("mousedown", function(e) {
+    e.preventDefault();
+    let tileNb = getCursorTile(this, e, hud.tilelist.width);
+    TILE[e.button] = (Object.values(Tile.list)[tileNb - 1] || "").id || "";
+    drawListAndHover(this, e);
+  });
+
+  hud.tilelist.addEventListener("mouseout", function(e) {
+    drawListAndHover(this, e);
+  });
+
+  hud.canvas.ctx = hud.canvas.getContext("2d");
+  hud.canvas.width = document.documentElement.clientWidth - hud.panel.clientWidth;
+  hud.canvas.height = document.documentElement.clientHeight;
+  hud.canvas.style.display = "none";
+  Cell.ctx = hud.canvas.ctx;
+  Cell.ctx.width = hud.canvas.width;
+  Cell.ctx.height = hud.canvas.width;
+  drawTileList();
+  drawSelect();
+}
+
+function loadCell(file) {
+  CELL = new Cell(file);
+  LEVEL = CELL.defaultLevel;
+  hud.level.innerHTML = LEVEL;
+  drawCell();
+  hud.canvas.style.display = "inline";
+  hud.startmenu.style.display = "none";
+
+  hud.canvas.addEventListener("mousemove", function(e) {
+    drawCell();
+    drawHover(this, e);
+  });
+
+  hud.canvas.addEventListener("mouseout", function(e) {
+    drawCell();
+  });
+
+  hud.canvas.addEventListener("mousedown", function(e) {
+    e.preventDefault();
+    let pos = getCursorTileXY(this, e);
+    if(CELL.terrain[LEVEL] === undefined)
+      CELL.terrain[LEVEL] = [];
+    if(CELL.terrain[LEVEL][pos.y] === undefined)
+      CELL.terrain[LEVEL][pos.y] = [];
+    CELL.terrain[LEVEL][pos.y][pos.x] = TILE[e.button];
+    drawCell();
+  });
+}
+
+function drawTileList() {
+  hud.tilelist.ctx.clearRect(0, 0, hud.tilelist.width, hud.tilelist.height);
+  let width = hud.tilelist.width / 32;
+  for(let i = 0; i < Object.keys(Tile.list).length; i++) {
+    let index = i + 1;
+    let x = (index % width) || width;
+    let y = Math.ceil(index / width);
+    Object.values(Tile.list)[i].draw(hud.tilelist.ctx, (x - 1) * 32, (y - 1) * 32);
+  }
+}
+
+function drawListAndHover(canvas, e) {
+  drawTileList();
+  drawHover(canvas, e);
+  drawSelect();
 }
 
 function getCursorPosition(canvas, e) {
@@ -66,47 +137,59 @@ function getCursorTile(canvas, e, width) {
   return tile;
 }
 
-function drawTileset(tileset) {
-  let cnv = hud.tilesetcanvas;
-  let ctx = cnv.getContext("2d");
-  let img = tileset.image;
-  cnv.width = img.width;
-  cnv.height = img.height;
-  ctx.drawImage(img, 0, 0);
-  drawSelect(ctx, tileset.image.width / 32);
-  hud.tile.innerHTML = TILE;
-
-  cnv.addEventListener("mousemove", function(e) {
-    ctx.drawImage(img, 0, 0);
-    drawHover(this, e);
-    drawSelect(ctx, tileset.image.width / 32);
-  });
-
-  cnv.addEventListener("mouseout", function(e) {
-    ctx.drawImage(img, 0, 0);
-    drawSelect(ctx, tileset.image.width / 32);
-  });
-
-  cnv.addEventListener("mousedown", function(e) {
-    TILE = getCursorTile(this, e, tileset.image.width);
-    hud.tile.innerHTML = TILE;
-    ctx.drawImage(img, 0, 0);
-    drawHover(this, e);
-    drawSelect(ctx, tileset.image.width / 32);
-  });
-}
-
 function drawHover(canvas, e) {
-  let ctx = canvas.getContext("2d");
   let pos = getCursorPosition(canvas, e);
   let x = Math.floor(pos.x / 32) * 32;
   let y = Math.floor(pos.y / 32) * 32;
-  ctx.fillStyle = "rgb(255,255,255,0.4)";
-  ctx.fillRect(x, y, 32, 32);
+  canvas.ctx.fillStyle = "rgb(255,255,255,0.4)";
+  canvas.ctx.fillRect(x, y, 32, 32);
 }
 
-function drawSelect(ctx, width) {
-  let x = (TILE % width) || width;
-  let y = Math.ceil(TILE / width);
-  ctx.strokeRect((x - 1) * 32, (y - 1) * 32, 32, 32);
+function drawSelect() {
+  let colors = ["blue", "red", "green", "yellow", "purple"];
+  hud.tile.innerHTML = "";
+  for(let i in TILE) {
+    let tileNb = Object.values(Tile.list).findIndex(t => t.id === TILE[i]) + 1;
+    let width = hud.tilelist.width / 32;
+    let x = (tileNb % width) || width;
+    let y = Math.ceil(tileNb / width);
+    hud.tilelist.ctx.strokeStyle = colors[i];
+    hud.tilelist.ctx.strokeRect((x - 1) * 32, (y - 1) * 32, 32, 32);
+    let name = TILE[i];
+    if(name === "") name = "(empty)"
+    hud.tile.innerHTML += `<span style="color:${colors[i]}">${name}</span><br>`;
+  }
+}
+
+function drawCell() {
+  Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
+  if(hud.drawAll.checked) {
+    CELL.draw();
+  } else {
+    CELL.drawLevel(LEVEL);
+  }
+}
+
+function cleanTerrainData() {
+  for(let level in CELL.terrain) {
+    for(let row in CELL.terrain[level]) {
+      let arrow = CELL.terrain[level][row];
+      let lastInd = arrow.length;
+      while(lastInd-- && arrow[lastInd] === "");
+      CELL.terrain[level][row].length = lastInd + 1;
+    }
+    let arlvl = CELL.terrain[level];
+    let lastInd = arlvl.length;
+    while(lastInd-- && arlvl[lastInd].length === 0);
+    CELL.terrain[level].length = lastInd + 1;
+  }
+
+  for(let z in CELL.terrain) {
+    for(let y in CELL.terrain[z]) {
+      for(let x = 0; x < CELL.terrain[z][y].length; x++) {
+        if(CELL.terrain[z][y][x] === undefined)
+          CELL.terrain[z][y][x] = "";
+      }
+    }
+  }
 }

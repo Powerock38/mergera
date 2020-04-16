@@ -1,28 +1,3 @@
-Tile.load([
-  {id:"tile000"},
-  {id:"tile001"},
-  {id:"tile003"},
-  {id:"tile005"},
-  {id:"tile006"},
-  {id:"tile007"},
-  {id:"tile008"},
-  {id:"tile009"},
-  {id:"tile010"},
-  {id:"tile011"},
-  {id:"tile012"},
-  {id:"tile013"},
-  {id:"stairs-up", stairs: D.up},
-],()=>{
-  console.log("All tiles loaded !");
-  Spritesheet.load([
-    "player",
-    "dog"
-  ],()=>{
-    console.log("All sprites loaded !");
-    begin();
-  });
-});
-
 let map, player, dog;
 
 function begin() {
@@ -34,15 +9,19 @@ function begin() {
   map.addEntity(dog, 3, 5, 0);
 
   const canvas = document.getElementById("mainframe");
-  Cell.ctx = canvas.getContext("2d");
   canvas.width = document.documentElement.clientWidth;
   canvas.height = document.documentElement.clientHeight;
+  Cell.ctx = canvas.getContext("2d");
+  Cell.ctx.width = canvas.width;
+  Cell.ctx.height = canvas.width;
+
+  let coos = document.getElementById("coos");
 
   //CTX.fillStyle = "rgba(0, 0, 0, 0.8)";
   //CTX.fillRect(0, 0, canvas.width, canvas.height);
   setInterval(() => {
-    Cell.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
     map.draw();
-    console.log(player.x+":"+player.y+":"+player.z);
+    coos.innerHTML = "XYZ : ("+player.x+";"+player.y+";"+player.z+")";
   }, 1000 / 30);
 }

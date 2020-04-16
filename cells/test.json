@@ -1,39 +1,44 @@
 {
- "defaultLevel": 0,
- "terrain": [
-  [
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile007", "tile005", "tile005", "tile005", "tile005", "tile005", "tile005"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009"],
-    ["stairs-up", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile011", "tile013", "tile013", "tile013", "tile013", "tile013", "tile013"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
-    ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"]
-  ],
-  [
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["tile000", "tile000", "tile000", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+  "defaultLevel": 0,
+  "terrain": [
+    [
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile007", "tile005", "tile005", "tile005", "tile005", "tile005", "tile005"],
+      ["", "", "", "stairs-left-2", "tile001", "tile001", "tile008", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009"],
+      ["stairs-up", "", "", "", "tile001", "tile001", "tile008", "tile009", "tile011", "tile013", "tile013", "tile013", "tile013", "tile013", "tile013"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
+      ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"]
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ["tile009", "tile009", "tile009"],
+      ["", "", "", "stairs-left-1"]
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ["", "wall", "wall"]
+    ]
   ]
- ]
 }

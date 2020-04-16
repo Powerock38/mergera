@@ -1,5 +1,3 @@
-const D = {up: 11, down: 2, left: 5, right: 8};
-
 class Entity {
   constructor(spriteName) {
     this.x = null; // tile coordinates, not pixels
@@ -97,13 +95,13 @@ class Entity {
     }
 
     if(dir === D.up) {
-      return this.adjTiles.up || (this.belowTiles.up && this.belowTiles.up.stairs);
+      return (this.adjTiles.up && this.adjTiles.up !== Tile.list[""]) || (this.belowTiles.up && this.belowTiles.up.stairs);
     } else if(dir === D.down) {
-      return this.adjTiles.down || (this.belowTiles.down && this.belowTiles.down.stairs);
+      return (this.adjTiles.down && this.adjTiles.down !== Tile.list[""]) || (this.belowTiles.down && this.belowTiles.down.stairs);
     } else if(dir === D.left) {
-      return this.adjTiles.left || (this.belowTiles.left && this.belowTiles.left.stairs);
+      return (this.adjTiles.left && this.adjTiles.left !== Tile.list[""]) || (this.belowTiles.left && this.belowTiles.left.stairs);
     } else if(dir === D.right) {
-      return this.adjTiles.right || (this.belowTiles.right && this.belowTiles.right.stairs);
+      return (this.adjTiles.right && this.adjTiles.right !== Tile.list[""]) || (this.belowTiles.right && this.belowTiles.right.stairs);
     }
   }
 
