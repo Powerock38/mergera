@@ -141,17 +141,17 @@ class Player extends Entity {
       right: false
     }
     document.addEventListener("keydown",(e)=>{
-           if(e.key === "z") this.go.up = true;
-      else if(e.key === "s") this.go.down = true;
-      else if(e.key === "q") this.go.left = true;
-      else if(e.key === "d") this.go.right = true;
+           if(e.key === "z" || e.key === "ArrowUp") this.go.up = true;
+      else if(e.key === "s" || e.key === "ArrowDown") this.go.down = true;
+      else if(e.key === "q" || e.key === "ArrowLeft") this.go.left = true;
+      else if(e.key === "d" || e.key === "ArrowRight") this.go.right = true;
     });
 
     document.addEventListener("keyup",(e)=>{
-           if(e.key === "z") this.go.up = false;
-      else if(e.key === "s") this.go.down = false;
-      else if(e.key === "q") this.go.left = false;
-      else if(e.key === "d") this.go.right = false;
+           if(e.key === "z" || e.key === "ArrowUp") this.go.up = false;
+      else if(e.key === "s" || e.key === "ArrowDown") this.go.down = false;
+      else if(e.key === "q" || e.key === "ArrowLeft") this.go.left = false;
+      else if(e.key === "d" || e.key === "ArrowRight") this.go.right = false;
     });
   }
 

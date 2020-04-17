@@ -13,6 +13,7 @@ body {
   overflow-y: auto;
   border-left: 1px solid white;
   color: white;
+  background-color: #282C34;
 }
 
 #tilelist {
@@ -21,4 +22,9 @@ body {
 
 #exportOutput {
   display: none;
+}
+
+button {
+  font-size: 1.5em;
+  padding: 0;
 }

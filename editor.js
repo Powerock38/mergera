@@ -1,5 +1,22 @@
 const hud = {};
-for(let hudElem of ["canvas", "panel", "tilelist", "tile", "levelUp", "levelDown", "drawAll", "level", "startmenu", "file", "export", "exportOutput"]) {
+for(let hudElem of [
+  "canvas",
+  "panel",
+  "tilelist",
+  "tile",
+  "levelUp",
+  "levelDown",
+  "drawAll",
+  "level",
+  "startmenu",
+  "file",
+  "export",
+  "exportOutput",
+  "addRow",
+  "addCol",
+  "remRow",
+  "remCol"
+]) {
   hud[hudElem] = document.getElementById(hudElem);
 }
 
@@ -22,6 +39,57 @@ hud.export.onclick = () => {
   hud.exportOutput.style.display = "none";
   //let b64data = btoa(JSON.stringify(data));
   //hud.dl.innerHTML = "<a download='map.json' href='data:application/octet-stream;charset=utf-16le;base64," + b64data +"'>download</a>";
+}
+
+hud.addRow.onclick = () => {
+  cleanTerrainData();
+  for(let z in CELL.terrain)
+    CELL.terrain[z].unshift([]);
+  drawCell();
+}
+
+hud.addCol.onclick = () => {
+  cleanTerrainData();
+  for(let z in CELL.terrain)
+    for(let y in CELL.terrain[z])
+      CELL.terrain[z][y].unshift("");
+  drawCell();
+}
+
+hud.remRow.onclick = () => {
+  cleanTerrainData();
+  let safe = true;
+
+  for(let z in CELL.terrain)
+    if(CELL.terrain[z][0].length !== 0)
+      safe = false;
+
+  if(!safe)
+    if(!window.confirm("The row contains tiles, proceed anyway?"))
+      return;
+
+  for(let z in CELL.terrain)
+    CELL.terrain[z].shift();
+  drawCell();
+}
+
+hud.remCol.onclick = () => {
+  cleanTerrainData();
+  let safe = true;
+
+  for(let z in CELL.terrain)
+    for(let y in CELL.terrain[z])
+      if(CELL.terrain[z][y][0] !== "" && CELL.terrain[z][y].length !== 0)
+        safe = false;
+
+  if(!safe)
+    if(!window.confirm("The column contains tiles, proceed anyway?"))
+      return;
+
+  for(let z in CELL.terrain)
+    for(let y in CELL.terrain[z])
+      CELL.terrain[z][y].shift();
+  drawCell();
 }
 
 hud.levelUp.onclick = () => {
@@ -171,6 +239,15 @@ function drawCell() {
 }
 
 function cleanTerrainData() {
+  for(let z in CELL.terrain) {
+    for(let y in CELL.terrain[z]) {
+      for(let x = 0; x < CELL.terrain[z][y].length; x++) {
+        if(CELL.terrain[z][y][x] === undefined)
+          CELL.terrain[z][y][x] = "";
+      }
+    }
+  }
+
   for(let level in CELL.terrain) {
     for(let row in CELL.terrain[level]) {
       let arrow = CELL.terrain[level][row];
@@ -182,14 +259,5 @@ function cleanTerrainData() {
     let lastInd = arlvl.length;
     while(lastInd-- && arlvl[lastInd].length === 0);
     CELL.terrain[level].length = lastInd + 1;
-  }
-
-  for(let z in CELL.terrain) {
-    for(let y in CELL.terrain[z]) {
-      for(let x = 0; x < CELL.terrain[z][y].length; x++) {
-        if(CELL.terrain[z][y][x] === undefined)
-          CELL.terrain[z][y][x] = "";
-      }
-    }
   }
 }
