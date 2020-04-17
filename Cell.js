@@ -13,18 +13,6 @@ class Cell {
     for(let z in this.terrain) {
       this.entities[z] = [];
     }
-    // this.maxZ = this.terrain.length - 1;
-    // this.maxX = 0;
-    // this.maxY = 0;
-    // for(let i = 0; i < this.terrain.length; i++) {
-    //   this.entities[i] = [];
-    //   let y = this.terrain[i].length - 1;
-    //   if(this.maxY < y) this.maxY = y;
-    //   for(let j = 0; j < this.terrain.length; j++) {
-    //     let x = this.terrain[i][j].length - 1;
-    //     if(this.maxX < x) this.maxX = x;
-    //   }
-    // }
   }
 
   addEntity(entity, x, y, z) {

@@ -1,19 +1,37 @@
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  overflow: hidden;
+  border: 0;
   background-color: black;
+  height: 100%;
+  overflow: hidden;
 }
 
 #panel {
-  position: absolute;
-  right: 0;
-  top: 0;
+  display: inline-block;
   height: 100%;
   width: 15%;
   overflow-y: auto;
-  border-left: 1px solid white;
+  overflow-x: hidden;
   color: white;
   background-color: #282C34;
+}
+
+#canvasContainer {
+  display: inline-block;
+  max-width: 85%;
+  width: 85%;
+  height: 100%;
+  overflow: scroll;
+}
+
+#startmenu {
+  display: inline-block;
+  width: 50%;
+  height: 100%;
 }
 
 #tilelist {
