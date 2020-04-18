@@ -27,7 +27,7 @@ class Tile {
 
   draw(ctx, x, y) {
     if(this.image)
-      ctx.drawImage(this.image, x, y, 32, 32);
+      ctx.drawImage(this.image, x * 32, y * 32, 32, 32);
   }
 }
 Tile.list = {};

@@ -1,4 +1,4 @@
-const D = {up: 11, down: 2, left: 5, right: 8};
+const D = {up: "up", down: "down", left: "left", right: "right"};
 
 Tile.load([
   {id:""},
@@ -36,11 +36,19 @@ Tile.load([
   {id:"stairs-left-2", stairs: D.left},
 ],()=>{
   console.log("All tiles loaded !");
-  Spritesheet.load([
-    "player",
-    "dog"
+  Prop.load([
+    {id:"boat"},
+    {id:"tree"},
+    {id:"cherrytree-trunk", block:[null, D.up]},
+    {id:"cherrytree-top"},
   ],()=>{
-    console.log("All sprites loaded !");
-    begin();
+    console.log("All props loaded !");
+    Spritesheet.load([
+      "player",
+      "dog"
+    ],()=>{
+      console.log("All sprites loaded !");
+      begin();
+    });
   });
 });

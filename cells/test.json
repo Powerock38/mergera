@@ -40,5 +40,13 @@
       [],
       ["", "wall", "wall"]
     ]
+  ],
+  "props": [
+    {"id":"boat","x":2,"y":3,"z":0},
+    {"id":"cherrytree-top","x":10,"y":2,"z":1},
+    {"id":"cherrytree-trunk","x":10,"y":5,"z":0}
+  ],
+  "entities": [
+    {"sprite":"dog","x":3,"y":5,"z":0}
   ]
 }

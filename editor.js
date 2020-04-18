@@ -104,8 +104,6 @@ function loadCell(file) {
     hud.exportOutput.select();
     document.execCommand("copy");
     hud.exportOutput.style.display = "none";
-    //let b64data = btoa(JSON.stringify(data));
-    //hud.dl.innerHTML = "<a download='map.json' href='data:application/octet-stream;charset=utf-16le;base64," + b64data +"'>download</a>";
   }
 
   hud.addRow.onclick = () => {
@@ -191,9 +189,9 @@ function drawTileList() {
   let width = hud.tilelist.width / 32;
   for(let i = 0; i < Object.keys(Tile.list).length; i++) {
     let index = i + 1;
-    let x = (index % width) || width;
-    let y = Math.ceil(index / width);
-    Object.values(Tile.list)[i].draw(hud.tilelist.ctx, (x - 1) * 32, (y - 1) * 32);
+    let x = ((index % width) || width) - 1;
+    let y = Math.ceil(index / width) - 1;
+    Object.values(Tile.list)[i].draw(hud.tilelist.ctx, x, y);
   }
 }
 
@@ -233,7 +231,6 @@ function drawHover(canvas, e) {
 }
 
 function drawSelect() {
-  let colors = ["white", "red", "green", "yellow", "purple"];
   hud.tile.innerHTML = "";
   for(let tile of TILE) {
     let tileId = tile.tile;

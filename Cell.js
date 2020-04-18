@@ -9,14 +9,33 @@ class Cell {
 
     this.defaultLevel = data.defaultLevel;
     this.terrain = data.terrain;
+
+    this.props = [];
+    for(let z in this.terrain)
+      this.props[z] = [];
+    for(let prop of data.props)
+      this.props[prop.z].push({id: prop.id, x: prop.x, y: prop.y});
+
     this.entities = [];
-    for(let z in this.terrain) {
+    for(let z in this.terrain)
       this.entities[z] = [];
+    for(let entity of data.entities)
+      this.addEntity(new Entity(entity.sprite), entity.x, entity.y, entity.z);
+  }
+
+  getProp(x, y, z) {
+    for(let prop of this.props[z]) {
+      let propObj = Prop.list[prop.id];
+      if(x >= prop.x && x < prop.x + propObj.width
+      && y >= prop.y && y < prop.y + propObj.height) {
+        let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
+        return {...propObj, tileNb: tileNb};
+      }
     }
   }
 
   addEntity(entity, x, y, z) {
-    if(z === undefined) z = this.terrain.defaultLevel;
+    if(z === undefined) z = this.defaultLevel;
     entity.setCell(this, x, y, z);
     this.entities[z].push(entity);
   }
@@ -37,12 +56,6 @@ class Cell {
   draw() {
     for(let z = 0; z < this.terrain.length; z++) {
       this.drawLevel(z);
-      if(this.entities[z]) {
-        for(let entity of this.entities[z]) {
-          entity.update();
-          entity.draw();
-        }
-      }
     }
   }
 
@@ -52,8 +65,19 @@ class Cell {
         if(this.terrain[z][y]) {
           for(let x = 0; x < this.terrain[z][y].length; x++) {
             if(Tile.list[this.terrain[z][y][x]])
-            Tile.list[this.terrain[z][y][x]].draw(Cell.ctx, x * 32, y * 32);
+              Tile.list[this.terrain[z][y][x]].draw(Cell.ctx, x, y);
           }
+        }
+      }
+
+      if(this.props[z])
+        for(let prop of this.props[z])
+          Prop.list[prop.id].draw(Cell.ctx, prop.x, prop.y);
+
+      if(this.entities[z]) {
+        for(let entity of this.entities[z]) {
+          entity.update();
+          entity.draw();
         }
       }
     }
