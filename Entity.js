@@ -106,7 +106,8 @@ class Entity {
 
     if(this.adjProps.on
     && this.adjProps.on.block
-    && this.adjProps.on.block[this.adjProps.on.tileNb] === dir)
+    && this.adjProps.on.block[this.adjProps.on.tileNb]
+    && this.adjProps.on.block[this.adjProps.on.tileNb].includes(dir))
       return false;
 
     let can = true;
@@ -120,8 +121,8 @@ class Entity {
 
         can = this.adjTiles[d] && this.adjTiles[d] !== Tile.list[""];
         can = can || (this.belowTiles[d] && this.belowTiles[d].stairs);
-        if(this.adjProps[d] && this.adjProps[d].block)
-          can = this.adjProps[d].block[this.adjProps[d].tileNb] !== od;
+        if(this.adjProps[d] && this.adjProps[d].block && this.adjProps[d].block[this.adjProps[d].tileNb])
+          can = !this.adjProps[d].block[this.adjProps[d].tileNb].includes(od);
         return can;
       }
     }

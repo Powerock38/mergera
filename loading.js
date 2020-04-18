@@ -39,7 +39,7 @@ Tile.load([
   Prop.load([
     {id:"boat"},
     {id:"tree"},
-    {id:"cherrytree-trunk", block:[null, D.up]},
+    {id:"cherrytree-trunk", block:[null, [D.up]]},
     {id:"cherrytree-top"},
   ],()=>{
     console.log("All props loaded !");
