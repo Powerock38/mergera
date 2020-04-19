@@ -55,7 +55,7 @@ class Entity {
     };
   }
 
-  update() {
+  updateAnimation() {
     let x = this.x * 32;
     let y = this.y * 32;
     if(this.going.up > 0) {
@@ -79,6 +79,23 @@ class Entity {
     }
     this.animX = x;
     this.animY = y;
+  }
+
+  updateTP() {
+    for(let tp of this.cell.teleporters) {
+      if(this.facing === tp.facing
+      && this.z >= tp.z1 && this.z <= tp.z2
+      && this.x >= tp.x1 && this.x <= tp.x2
+      && this.y >= tp.y1 && this.y <= tp.y2) {
+        this.cell.removeEntity(this);
+        Cell.list[tp.cell].addEntity(this, tp.x, tp.y, tp.z);
+      }
+    }
+  }
+
+  update() {
+    this.updateAnimation();
+    this.updateTP();
   }
 
   draw() {
@@ -147,7 +164,7 @@ class Entity {
       } else if(dir === D.right) {
         this.going.right = this.speed;
       }
-      if(this.adjTiles.on.stairs === dir) {
+      if(this.adjTiles.on && this.adjTiles.on.stairs === dir) {
         this.cell.moveEntity(this, this.x, this.y, this.z + 1);
       }
     }

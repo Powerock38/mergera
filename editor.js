@@ -4,6 +4,7 @@ for(let hudElem of [
   "canvas",
   "panel",
   "tilelist",
+  "proplist",
   "tile",
   "levelUp",
   "levelDown",
@@ -16,7 +17,8 @@ for(let hudElem of [
   "addRow",
   "addCol",
   "remRow",
-  "remCol"
+  "remCol",
+  "coos"
 ]) {
   hud[hudElem] = document.getElementById(hudElem);
 }
@@ -57,6 +59,7 @@ function begin() {
   hud.canvas.style.display = "none";
   drawTileList();
   drawSelect();
+  drawProplist();
 }
 
 function loadCell(file) {
@@ -95,7 +98,10 @@ function loadCell(file) {
     cleanTerrainData();
     let data = {
       defaultLevel: CELL.defaultLevel,
-      terrain: CELL.terrain
+      terrain: CELL.terrain,
+      props: CELL.props,
+      entities: CELL.entities,
+      teleporters: CELL.teleporters
     }
     let jsonData = JSON.stringify(data);
     hud.exportOutput.innerHTML = jsonData;
@@ -184,6 +190,16 @@ function putTile(canvas, e) {
       CELL.terrain[LEVEL][pos.y][pos.x] = tile.tile;
 }
 
+function drawProplist() {
+  for(let i of Object.keys(Prop.list)) {
+    let img = hud.proplist.appendChild(Prop.list[i].image);
+    img.id = Prop.list[i].id;
+    img.onclick = () => {
+      selectProp(img.id);
+    }
+  }
+}
+
 function drawTileList() {
   hud.tilelist.ctx.clearRect(0, 0, hud.tilelist.width, hud.tilelist.height);
   let width = hud.tilelist.width / 32;
@@ -226,6 +242,7 @@ function drawHover(canvas, e) {
   let pos = getCursorPosition(canvas, e);
   let x = Math.floor(pos.x / 32) * 32;
   let y = Math.floor(pos.y / 32) * 32;
+  hud.coos.innerHTML = "(" + x / 32 + ":" + y / 32 + ")";
   canvas.ctx.fillStyle = "rgb(255,255,255,0.4)";
   canvas.ctx.fillRect(x, y, 32, 32);
 }
@@ -282,8 +299,10 @@ function getMax() {
 function cleanTerrainData() {
   for(let z in CELL.terrain) {
     for(let y in CELL.terrain[z]) {
+      if(CELL.terrain[z][y] == undefined)
+        CELL.terrain[z][y] = [];
       for(let x = 0; x < CELL.terrain[z][y].length; x++) {
-        if(CELL.terrain[z][y][x] === undefined)
+        if(CELL.terrain[z][y][x] == undefined)
           CELL.terrain[z][y][x] = "";
       }
     }

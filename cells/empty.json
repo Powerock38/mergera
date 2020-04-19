@@ -1,4 +1,7 @@
 {
   "defaultLevel": 0,
-  "terrain": []
+  "terrain": [],
+  "props": [],
+  "entities": [],
+  "teleporters": []
 }

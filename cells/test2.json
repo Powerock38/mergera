@@ -1,0 +1,75 @@
+{
+  "defaultLevel": 0,
+  "terrain": [
+    [
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1"],
+      ["dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1"],
+      ["dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1", "dirt1"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "stairs-up", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"]
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ["", "", "", "", "", "", "", "", "", "", "stairs-up"]
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ["", "", "", "", "", "", "", "", "", "", "stairs-up"]
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ["", "", "", "", "", "", "", "", "tile011", "tile011", "tile011", "tile011", "tile011"]
+    ]
+  ],
+  "props": [],
+  "entities": [],
+  "teleporters": [{
+    "cell": "test",
+    "x": 14,
+    "y": 7,
+    "z": 0,
+    "facing": "left",
+    "x1": 0,
+    "y1": 5,
+    "z1": 0,
+    "x2": 0,
+    "y2": 6,
+    "z2": 0
+  }]
+}

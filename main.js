@@ -1,14 +1,12 @@
 var mainLoop;
 var grid = false;
-let map, player, dog;
+var player;
 
 function begin() {
-  map = new Cell("test");
+  new Cell("test");
+  new Cell("test2");
   player = new Player("player");
-  //dog = new Entity("dog");
-
-  map.addEntity(player, 11, 6, 0);
-  //map.addEntity(dog, 3, 5, 0);
+  Cell.list["test"].addEntity(player, 11, 6, 0);
 
   const canvas = document.getElementById("mainframe");
   canvas.width = document.documentElement.clientWidth;
@@ -23,7 +21,7 @@ function begin() {
   //CTX.fillRect(0, 0, canvas.width, canvas.height);
   mainLoop = setInterval(() => {
     Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
-    map.draw();
+    player.cell.draw();
     if(grid) {
       for(let i = 0; i < 15; i++) {
         Cell.ctx.beginPath();

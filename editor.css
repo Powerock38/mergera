@@ -38,6 +38,14 @@ body {
   border-bottom: 1px solid white;
 }
 
+#proplist > img:hover {
+  filter: brightness(200%);
+}
+
+#proplist > img.selected {
+  border: 2px solid red;
+}
+
 #exportOutput {
   display: none;
 }

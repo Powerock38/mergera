@@ -48,5 +48,11 @@
   ],
   "entities": [
     {"sprite":"dog","x":3,"y":5,"z":0}
+  ],
+  "teleporters": [
+    {"cell":"test2", "x":0, "y":6, "z": 0,
+    "facing": "right",
+    "x1":14, "y1":6, "z1":0,
+    "x2":14, "y2":8, "z2":0}
   ]
 }

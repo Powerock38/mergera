@@ -7,6 +7,7 @@ class Cell {
     	throw new Error("Can't load cell \"./cells/" + file + "\" (" + xhr.status + ").");
     let data = JSON.parse(xhr.responseText);
 
+    this.id = file;
     this.defaultLevel = data.defaultLevel;
     this.terrain = data.terrain;
 
@@ -14,13 +15,18 @@ class Cell {
     for(let z in this.terrain)
       this.props[z] = [];
     for(let prop of data.props)
-      this.props[prop.z].push({id: prop.id, x: prop.x, y: prop.y});
+      if(this.props[prop.z])
+        this.props[prop.z].push({id: prop.id, x: prop.x, y: prop.y});
 
     this.entities = [];
     for(let z in this.terrain)
       this.entities[z] = [];
     for(let entity of data.entities)
       this.addEntity(new Entity(entity.sprite), entity.x, entity.y, entity.z);
+
+    this.teleporters = data.teleporters;
+
+    Cell.list[this.id] = this;
   }
 
   getProp(x, y, z) {
@@ -94,3 +100,4 @@ class Cell {
   //   }
   // }
 }
+Cell.list = {};
