@@ -42,12 +42,16 @@
     ]
   ],
   "props": [
-    {"id":"boat","x":2,"y":3,"z":0},
-    {"id":"cherrytree-top","x":10,"y":2,"z":1},
-    {"id":"cherrytree-trunk","x":10,"y":5,"z":0}
+    [
+      {"id":"boat","x":2,"y":3},
+      {"id":"cherrytree-trunk","x":10,"y":5}
+    ],
+    [
+      {"id":"cherrytree-top","x":10,"y":2}
+    ]
   ],
   "entities": [
-    {"sprite":"dog","x":3,"y":5,"z":0}
+      {"sprite":"dog","x":3,"y":5,"z":0}
   ],
   "teleporters": [
     {"cell":"test2", "x":0, "y":6, "z": 0,

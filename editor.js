@@ -18,11 +18,13 @@ for(let hudElem of [
   "addCol",
   "remRow",
   "remCol",
-  "coos"
+  "coos",
+  "removeProp"
 ]) {
   hud[hudElem] = document.getElementById(hudElem);
 }
 
+var PROP = null;
 var TILE = [
   {tile:"", pressing:false, color:"white"},
   {tile:"", pressing:false, color:"red"},
@@ -84,7 +86,11 @@ function loadCell(file) {
 
   hud.canvas.addEventListener("mousedown", function(e) {
     e.preventDefault();
-    TILE[e.button].pressing = true;
+    if(PROP)
+      putProp(this, e);
+    else
+      TILE[e.button].pressing = true;
+
     putTile(this, e);
     drawCell();
   });
@@ -100,7 +106,7 @@ function loadCell(file) {
       defaultLevel: CELL.defaultLevel,
       terrain: CELL.terrain,
       props: CELL.props,
-      entities: CELL.entities,
+      entities: CELL.rawEntities,
       teleporters: CELL.teleporters
     }
     let jsonData = JSON.stringify(data);
@@ -178,16 +184,48 @@ function loadCell(file) {
   }
 }
 
-function putTile(canvas, e) {
-  let pos = getCursorTileXY(canvas, e);
-  if(CELL.terrain[LEVEL] === undefined)
-    CELL.terrain[LEVEL] = [];
-  if(CELL.terrain[LEVEL][pos.y] === undefined)
-    CELL.terrain[LEVEL][pos.y] = [];
+function selectProp(id) {
+  PROP = id;
+  hud.canvas.classList.remove("deleteSelected");
+  hud.removeProp.classList.remove("selected");
+  for(let i of Object.keys(Prop.list)) {
+    hud.proplist.querySelector("#" + Prop.list[i].id).classList.remove("selected");
+  }
+  if(id === "DELETE_PROP") {
+    hud.canvas.classList.add("deleteSelected");
+    hud.removeProp.classList.add("selected");
+  } else if(id) {
+    hud.proplist.querySelector("#" + id).classList.add("selected");
+  }
+}
 
-  for(let tile of TILE)
-    if(tile.pressing)
-      CELL.terrain[LEVEL][pos.y][pos.x] = tile.tile;
+function getProp(x, y, z) {
+  for(let prop of CELL.props[z]) {
+    let propObj = Prop.list[prop.id];
+    if(x >= prop.x && x < prop.x + propObj.width
+    && y >= prop.y && y < prop.y + propObj.height) {
+      let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
+      return prop;
+    }
+  }
+}
+
+function putProp(canvas, e) {
+  let pos = getCursorTileXY(canvas, e);
+  if(PROP === "DELETE_PROP") {
+    let index = CELL.props[LEVEL].indexOf(getProp(pos.x, pos.y, LEVEL));
+    if(index !== -1) {
+      CELL.props[LEVEL].splice(index, 1);
+    }
+    selectProp(null);
+    return;
+  }
+
+  if(CELL.props[LEVEL] === undefined)
+    CELL.props[LEVEL] = [];
+
+  CELL.props[LEVEL].push({id:PROP, x: pos.x, y: pos.y});
+  selectProp(null);
 }
 
 function drawProplist() {
@@ -198,6 +236,18 @@ function drawProplist() {
       selectProp(img.id);
     }
   }
+}
+
+function putTile(canvas, e) {
+  let pos = getCursorTileXY(canvas, e);
+  if(CELL.terrain[LEVEL] === undefined)
+    CELL.terrain[LEVEL] = [];
+  if(CELL.terrain[LEVEL][pos.y] === undefined)
+    CELL.terrain[LEVEL][pos.y] = [];
+
+  for(let tile of TILE)
+    if(tile.pressing)
+      CELL.terrain[LEVEL][pos.y][pos.x] = tile.tile;
 }
 
 function drawTileList() {

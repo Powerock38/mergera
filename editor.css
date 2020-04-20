@@ -10,6 +10,10 @@ body {
   overflow: hidden;
 }
 
+.deleteSelected {
+  cursor: not-allowed;
+}
+
 #panel {
   display: inline-block;
   height: 100%;
@@ -42,8 +46,22 @@ body {
   filter: brightness(200%);
 }
 
-#proplist > img.selected {
-  border: 2px solid red;
+#proplist > img {
+  padding: 5px;
+}
+
+#removeProp {
+  border: 0;
+  padding: 5px;
+}
+
+#removeProp:hover {
+  background-color: lightgray;
+}
+
+.selected {
+  border: 2px solid red !important;
+  padding: 3px !important;
 }
 
 #exportOutput {

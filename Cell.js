@@ -10,18 +10,12 @@ class Cell {
     this.id = file;
     this.defaultLevel = data.defaultLevel;
     this.terrain = data.terrain;
-
-    this.props = [];
-    for(let z in this.terrain)
-      this.props[z] = [];
-    for(let prop of data.props)
-      if(this.props[prop.z])
-        this.props[prop.z].push({id: prop.id, x: prop.x, y: prop.y});
-
+    this.props = data.props;
+    this.rawEntities = data.entities;
     this.entities = [];
     for(let z in this.terrain)
       this.entities[z] = [];
-    for(let entity of data.entities)
+    for(let entity of this.rawEntities)
       this.addEntity(new Entity(entity.sprite), entity.x, entity.y, entity.z);
 
     this.teleporters = data.teleporters;
