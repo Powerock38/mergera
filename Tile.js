@@ -2,26 +2,27 @@ class Tile {
   static load(list, callback) {
     let nbToLoad = list.length;
     for(let tile of list) {
-      if(tile.id === "") {
+      if(tile === "") {
         new Tile(false, tile);
         console.log("Loaded empty tile");
         --nbToLoad === 0 && callback();
       } else {
         let image = new Image();
-        image.src = "./tiles/" + tile.id + ".png";
+        image.src = "./tiles/" + tile + ".png";
         image.onload = () =>  {
           new Tile(image, tile);
-          console.log("Loaded tile " + tile.id);
+          console.log("Loaded tile " + tile);
           --nbToLoad === 0 && callback();
         }
       }
     }
   }
 
-  constructor(image, param) {
+  constructor(image, id) {
     this.image = image;
     //this.name = /[^/]*$/.exec(this.image.src)[0].slice(0, -4);
-    for(let p in param) this[p] = param[p];
+    //for(let p in param) this[p] = param[p];
+    this.id = id;
     Tile.list[this.id] = this;
   }
 
