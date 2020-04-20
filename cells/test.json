@@ -9,8 +9,8 @@
       ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
       ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
       ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile007", "tile005", "tile005", "tile005", "tile005", "tile005", "tile005"],
-      ["", "", "", "stairs-left-2", "tile001", "tile001", "tile008", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009"],
-      ["stairs-up", "", "", "", "tile001", "tile001", "tile008", "tile009", "tile011", "tile013", "tile013", "tile013", "tile013", "tile013", "tile013"],
+      ["", "", "", "tile001", "tile001", "tile001", "tile008", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009", "tile009"],
+      ["tile001", "", "", "tile001", "tile001", "tile001", "tile008", "tile009", "tile011", "tile013", "tile013", "tile013", "tile013", "tile013", "tile013"],
       ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
       ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
       ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],
@@ -26,8 +26,7 @@
       [],
       [],
       [],
-      ["tile009", "tile009", "tile009"],
-      ["", "", "", "stairs-left-1"]
+      ["tile009", "tile009", "tile009"]
     ],
     [
       [],
@@ -42,21 +41,46 @@
     ]
   ],
   "props": [
-    [
-      {"id":"boat","x":2,"y":3},
-      {"id":"cherrytree-trunk","x":10,"y":5}
-    ],
-    [
-      {"id":"cherrytree-top","x":10,"y":2}
-    ]
+    [{
+      "id": "boat",
+      "x": 2,
+      "y": 3
+    }, {
+      "id": "cherrytree-trunk",
+      "x": 10,
+      "y": 5
+    }, {
+      "id": "brick-stairs-left",
+      "x": 3,
+      "y": 7
+    }, {
+      "id": "brick-stairs-up",
+      "x": 0,
+      "y": 8
+    }],
+    [{
+      "id": "cherrytree-top",
+      "x": 10,
+      "y": 2
+    }]
   ],
-  "entities": [
-      {"sprite":"dog","x":3,"y":5,"z":0}
-  ],
-  "teleporters": [
-    {"cell":"test2", "x":0, "y":6, "z": 0,
+  "entities": [{
+    "sprite": "dog",
+    "x": 3,
+    "y": 5,
+    "z": 0
+  }],
+  "teleporters": [{
+    "cell": "test2",
+    "x": 0,
+    "y": 6,
+    "z": 0,
     "facing": "right",
-    "x1":14, "y1":6, "z1":0,
-    "x2":14, "y2":8, "z2":0}
-  ]
+    "x1": 14,
+    "y1": 6,
+    "z1": 0,
+    "x2": 14,
+    "y2": 8,
+    "z2": 0
+  }]
 }

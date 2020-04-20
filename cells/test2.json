@@ -14,7 +14,7 @@
       ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
       ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
       ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"],
-      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "stairs-up", "grass2", "grass2"],
+      ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "", "grass2", "grass2"],
       ["grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2", "grass2"]
     ],
     [
@@ -29,7 +29,7 @@
       [],
       [],
       [],
-      ["", "", "", "", "", "", "", "", "", "", "stairs-up"]
+      ["", "", "", "", "", "", "", "", "", "", ""]
     ],
     [
       [],
@@ -42,7 +42,7 @@
       [],
       [],
       [],
-      ["", "", "", "", "", "", "", "", "", "", "stairs-up"]
+      ["", "", "", "", "", "", "", "", "", "", ""]
     ],
     [
       [],
@@ -55,7 +55,8 @@
       [],
       [],
       ["", "", "", "", "", "", "", "", "tile011", "tile011", "tile011", "tile011", "tile011"]
-    ]
+    ],
+    [null, null, null, null, null, null, null, null, null, ["", "", "", "", "", "tile011", "tile011"]]
   ],
   "props": [],
   "entities": [],

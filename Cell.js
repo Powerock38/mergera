@@ -24,6 +24,7 @@ class Cell {
   }
 
   getProp(x, y, z) {
+    if(this.props[z])
     for(let prop of this.props[z]) {
       let propObj = Prop.list[prop.id];
       if(x >= prop.x && x < prop.x + propObj.width

@@ -45,13 +45,13 @@ class Entity {
     };
   }
 
-  get belowTiles() {
+  get belowProps() {
     return {
-      on:    Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y]     || "")[this.x]],
-      up:    Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y - 1] || "")[this.x]],
-      down:  Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y + 1] || "")[this.x]],
-      right: Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y]     || "")[this.x + 1]],
-      left:  Tile.list[((this.cell.terrain[this.z - 1] || "")[this.y]     || "")[this.x - 1]]
+      on:    this.cell.getProp(this.x, this.y, this.z - 1),
+      up:    this.cell.getProp(this.x, this.y - 1, this.z - 1),
+      down:  this.cell.getProp(this.x, this.y + 1, this.z - 1),
+      right: this.cell.getProp(this.x + 1, this.y, this.z - 1),
+      left:  this.cell.getProp(this.x - 1, this.y, this.z - 1)
     };
   }
 
@@ -112,7 +112,7 @@ class Entity {
     } else if(dir === D.right) {
       this.x++;
     }
-    if(this.belowTiles.on && this.belowTiles.on.stairs)
+    if(this.belowProps.on && this.belowProps.on.stairs)
       this.cell.moveEntity(this, this.x, this.y, this.z - 1);
   }
 
@@ -137,7 +137,7 @@ class Entity {
         else if(d === D.right) od = D.left;
 
         can = this.adjTiles[d] && this.adjTiles[d] !== Tile.list[""];
-        can = can || (this.belowTiles[d] && this.belowTiles[d].stairs);
+        can = can || (this.belowProps[d] && this.belowProps[d].stairs);
         if(this.adjProps[d] && this.adjProps[d].block && this.adjProps[d].block[this.adjProps[d].tileNb])
           can = !this.adjProps[d].block[this.adjProps[d].tileNb].includes(od);
         return can;
@@ -148,7 +148,7 @@ class Entity {
   move(dir) {
     if(this.facing !== dir) {
       this.facing = dir;
-    } else if(this.canMove(dir) || (this.adjTiles.on && this.adjTiles.on.stairs === dir)) {
+    } else if(this.canMove(dir) || (this.adjProps.on && this.adjProps.on.stairs === dir)) {
       this.going = {
         up: 0,
         down: 0,
@@ -164,7 +164,7 @@ class Entity {
       } else if(dir === D.right) {
         this.going.right = this.speed;
       }
-      if(this.adjTiles.on && this.adjTiles.on.stairs === dir) {
+      if(this.adjProps.on && this.adjProps.on.stairs === dir) {
         this.cell.moveEntity(this, this.x, this.y, this.z + 1);
       }
     }

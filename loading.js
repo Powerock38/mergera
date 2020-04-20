@@ -35,13 +35,12 @@ Tile.load([
   {id:"dirt1grass2_trbl-1"},
   {id:"dirt1grass2_trbl-2"},
   {id:"wall"},
-  {id:"stairs-up", stairs: D.up},
-  {id:"stairs-left-1", stairs: D.left},
-  {id:"stairs-left-2", stairs: D.left},
 ],()=>{
   console.log("All tiles loaded !");
   Prop.load([
-    {id:"boat"},
+    {id:"brick-stairs-up", stairs: D.up, block:[[D.left, D.right]]},
+    {id:"brick-stairs-left", stairs: D.left, block:[null, [D.up, D.down, D.left, D.right]]},
+    {id:"boat", block:[[D.up, D.down, D.left, D.right]]},
     {id:"tree"},
     {id:"cherrytree-trunk", block:[null, [D.up]]},
     {id:"cherrytree-top"},
