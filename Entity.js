@@ -35,16 +35,6 @@ class Entity {
     };
   }
 
-  get adjTiles() {
-    return {
-      on:    Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x]],
-      up:    Tile.list[(this.cell.terrain[this.z][this.y - 1] || "")[this.x]],
-      down:  Tile.list[(this.cell.terrain[this.z][this.y + 1] || "")[this.x]],
-      right: Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x + 1]],
-      left:  Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x - 1]]
-    };
-  }
-
   get belowProps() {
     return {
       on:    this.cell.getProp(this.x, this.y, this.z - 1),
@@ -52,6 +42,16 @@ class Entity {
       down:  this.cell.getProp(this.x, this.y + 1, this.z - 1),
       right: this.cell.getProp(this.x + 1, this.y, this.z - 1),
       left:  this.cell.getProp(this.x - 1, this.y, this.z - 1)
+    };
+  }
+
+  get adjTiles() {
+    return {
+      on:    Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x]],
+      up:    Tile.list[(this.cell.terrain[this.z][this.y - 1] || "")[this.x]],
+      down:  Tile.list[(this.cell.terrain[this.z][this.y + 1] || "")[this.x]],
+      right: Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x + 1]],
+      left:  Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x - 1]]
     };
   }
 

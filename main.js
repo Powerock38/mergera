@@ -35,6 +35,6 @@ function begin() {
         Cell.ctx.stroke();
       }
     }
-    coos.innerHTML = "XYZ : ("+player.x+";"+player.y+";"+player.z+")";
+    coos.innerHTML = "("+player.x+";"+player.y+";"+player.z+")";
   }, 1000 / 30);
 }
