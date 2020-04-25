@@ -1,0 +1,31 @@
+{
+  "name": "tile-rpg",
+  "version": "1.0.0",
+  "description": "A tiled MMO rpg",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Powerock38/tile-rpg.git"
+  },
+  "keywords": [
+    "rpg",
+    "js",
+    "mmo",
+    "canvas",
+    "node"
+  ],
+  "author": "powerock",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Powerock38/tile-rpg/issues"
+  },
+  "homepage": "https://github.com/Powerock38/tile-rpg#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "image-size": "^0.8.3",
+    "ws": "^7.2.3"
+  }
+}

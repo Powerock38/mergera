@@ -1,24 +1,27 @@
-class Cell {
-  constructor(file) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", "./cells/" + file + ".json", false);
-    xhr.send(null);
-    if(xhr.readyState != 4 || (xhr.status != 200 && xhr.status != 0))
-    	throw new Error("Can't load cell \"./cells/" + file + "\" (" + xhr.status + ").");
-    let data = JSON.parse(xhr.responseText);
+const fs = require('fs');
+const Entity = require("./Entity.js");
+const Prop = require("./Prop.js");
 
-    this.id = file;
+class Cell {
+  static load(list, callback) {
+    for(let cell of list) {
+      let data = JSON.parse(fs.readFileSync("./cells/" + cell + ".json"));
+      new Cell(cell, data);
+      console.log("Loaded cell " + cell);
+    }
+    callback();
+  }
+
+  constructor(id, data) {
+    this.id = id;
+    this.resetPacks();
     this.defaultLevel = data.defaultLevel;
     this.terrain = data.terrain;
     this.props = data.props;
-    this.rawEntities = data.entities;
-    this.entities = [];
-    for(let z in this.terrain)
-      this.entities[z] = [];
-    for(let entity of this.rawEntities)
-      this.addEntity(new Entity(entity.sprite), entity.x, entity.y, entity.z);
-
     this.teleporters = data.teleporters;
+    this.entities = [];
+    for(let entity of data.entities)
+      new Entity(entity.sprite, this, entity.x, entity.y, entity.z);
 
     Cell.list[this.id] = this;
   }
@@ -35,64 +38,52 @@ class Cell {
     }
   }
 
-  addEntity(entity, x, y, z) {
-    if(z === undefined) z = this.defaultLevel;
-    entity.setCell(this, x, y, z);
-    this.entities[z].push(entity);
+  addEntity(entity) {
+    this.entities[entity.id] = entity;
+    this.nextInitPack.entities.push(entity.initPack);
   }
 
-  removeEntity(entity) {
-    for(let i = 0; i < this.entities[entity.z].length; i++) {
-      if(entity === this.entities[entity.z][i]) {
-        this.entities[entity.z].splice(i, 1);
-      }
+  removeEntity(id) {
+    delete this.entities[id];
+    this.nextRemovePack.entities.push(id);
+  }
+
+  update() {
+    for(let i in this.entities) {
+      this.entities[i].update();
     }
   }
 
-  moveEntity(entity, x, y, z) {
-    this.removeEntity(entity);
-    this.addEntity(entity, x, y, z);
-  }
-
-  draw() {
-    for(let z = 0; z < this.terrain.length; z++) {
-      this.drawLevel(z);
+  //NET CODE
+  get initPack() {
+    let entities = [];
+    for(let i in this.entities) {
+      entities.push(this.entities[i].initPack);
     }
+    return {
+      id: this.id,
+      terrain: this.terrain,
+      props: this.props,
+      entities: entities,
+    };
   }
 
-  drawLevel(z) {
-    if(this.terrain[z]) {
-      for(let y = 0; y < this.terrain[z].length; y++) {
-        if(this.terrain[z][y]) {
-          for(let x = 0; x < this.terrain[z][y].length; x++) {
-            if(Tile.list[this.terrain[z][y][x]])
-              Tile.list[this.terrain[z][y][x]].draw(Cell.ctx, x, y);
-          }
-        }
-      }
-
-      if(this.props[z])
-        for(let prop of this.props[z])
-          Prop.list[prop.id].draw(Cell.ctx, prop.x, prop.y);
-
-      if(this.entities[z]) {
-        for(let entity of this.entities[z]) {
-          entity.update();
-          entity.draw();
-        }
-      }
+  get updatePack() {
+    let entities = [];
+    for(let i in this.entities) {
+      entities.push(this.entities[i].updatePack);
     }
+    return {
+      id: this.id,
+      entities: entities,
+    };
   }
 
-  // drawTileStack(x, y) {
-  //   for(let z = 0; z < this.terrain.length; z++) {
-  //     // for(let entity of this.entities[z]) {
-  //     //   if(entity.x = x && entity.y = y)
-  //     //     entity.draw();
-  //     // }
-  //     if(Tile.notNull(this.terrain[z][y][x]))
-  //       Tile.list[this.terrain[z][y][x]].draw(Cell.ctx, x * 32, y * 32);
-  //   }
-  // }
+  resetPacks() {
+    this.nextInitPack = {id: this.id, entities:[]};
+    this.nextRemovePack = {id: this.id, entities:[]};
+  }
 }
-Cell.list = {};
+Cell.list = [];
+
+module.exports = Cell;

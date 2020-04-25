@@ -8,7 +8,7 @@ class Tile {
         --nbToLoad === 0 && callback();
       } else {
         let image = new Image();
-        image.src = "./tiles/" + tile + ".png";
+        image.src = "../tiles/" + tile + ".png";
         image.onload = () =>  {
           new Tile(image, tile);
           console.log("Loaded tile " + tile);

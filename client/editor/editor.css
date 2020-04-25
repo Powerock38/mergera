@@ -5,6 +5,7 @@ html {
 body {
   margin: 0;
   border: 0;
+  color: white;
   background-color: black;
   height: 100%;
   overflow: hidden;

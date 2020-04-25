@@ -1,32 +1,28 @@
 class Entity {
-  constructor(sprite, cell, x, y, z, id) {
-    this.id = id || uuid();
-    this.animX = x * 32;
-    this.animY = y * 32;
-    this.frame = 2;
+  constructor(spriteName) {
+    this.x = null; // tile coordinates, not pixels
+    this.y = null;
+    this.z = null;
+    this.cell = null;
+    this.animX = this.x;
+    this.animY = this.y;
     this.facing = D.down;
+    this.frame = 2;
     this.speed = 8;
-    this.sprite = sprite;
+    this.sprite = Spritesheet.list[spriteName];
     this.going = {
       up: 0,
       down: 0,
       left: 0,
       right: 0
     };
-    this.setCell(cell, x, y, z);
   }
 
-  setCell(cell, x, y, z) { //override in Player
+  setCell(cell, x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
-    if(this.cell !== cell) { //if changing cell
-      if(this.cell) this.cell.removeEntity(this.id);
-      this.cell = cell;
-      cell.addEntity(this);
-      return true;
-    }
-    return false;
+    this.cell = cell;
   }
 
   get adjProps() {
@@ -51,11 +47,11 @@ class Entity {
 
   get adjTiles() {
     return {
-      on:    (this.cell.terrain[this.z][this.y]     || "")[this.x],
-      up:    (this.cell.terrain[this.z][this.y - 1] || "")[this.x],
-      down:  (this.cell.terrain[this.z][this.y + 1] || "")[this.x],
-      right: (this.cell.terrain[this.z][this.y]     || "")[this.x + 1],
-      left:  (this.cell.terrain[this.z][this.y]     || "")[this.x - 1]
+      on:    Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x]],
+      up:    Tile.list[(this.cell.terrain[this.z][this.y - 1] || "")[this.x]],
+      down:  Tile.list[(this.cell.terrain[this.z][this.y + 1] || "")[this.x]],
+      right: Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x + 1]],
+      left:  Tile.list[(this.cell.terrain[this.z][this.y]     || "")[this.x - 1]]
     };
   }
 
@@ -85,21 +81,25 @@ class Entity {
     this.animY = y;
   }
 
-  updateTP() { //maybe move this in Cell
+  updateTP() {
     for(let tp of this.cell.teleporters) {
       if(this.facing === tp.facing
       && this.z >= tp.z1 && this.z <= tp.z2
       && this.x >= tp.x1 && this.x <= tp.x2
       && this.y >= tp.y1 && this.y <= tp.y2) {
-        let cell = require("./Cell.js").list[tp.cell];
-        this.setCell(cell, tp.x, tp.y, tp.z);
+        this.cell.removeEntity(this);
+        Cell.list[tp.cell].addEntity(this, tp.x, tp.y, tp.z);
       }
     }
   }
 
-  update() { //override in Player
+  update() {
     this.updateAnimation();
     this.updateTP();
+  }
+
+  draw() {
+    this.sprite.drawFrame(Cell.ctx, this.frame, this.animX, this.animY);
   }
 
   afterMove(dir) {
@@ -113,7 +113,7 @@ class Entity {
       this.x++;
     }
     if(this.belowProps.on && this.belowProps.on.stairs)
-      this.z--;
+      this.cell.moveEntity(this, this.x, this.y, this.z - 1);
   }
 
   canMove(dir) {
@@ -130,13 +130,13 @@ class Entity {
     let can = true;
     for(let d of Object.values(D)) {
       if(dir === d) {
-        let od; //opposite direction
+        let od;
              if(d === D.up)    od = D.down;
         else if(d === D.down)  od = D.up;
         else if(d === D.left)  od = D.right;
         else if(d === D.right) od = D.left;
 
-        can = this.adjTiles[d] && this.adjTiles[d] !== "";
+        can = this.adjTiles[d] && this.adjTiles[d] !== Tile.list[""];
         can = can || (this.belowProps[d] && this.belowProps[d].stairs);
         if(this.adjProps[d] && this.adjProps[d].block && this.adjProps[d].block[this.adjProps[d].tileNb])
           can = !this.adjProps[d].block[this.adjProps[d].tileNb].includes(od);
@@ -164,28 +164,44 @@ class Entity {
       } else if(dir === D.right) {
         this.going.right = this.speed;
       }
-      if(this.adjProps.on && this.adjProps.on.stairs === dir)
-        this.z++;
+      if(this.adjProps.on && this.adjProps.on.stairs === dir) {
+        this.cell.moveEntity(this, this.x, this.y, this.z + 1);
+      }
     }
   }
+}
 
-  //NET CODE
-  get initPack() {
-    return Object.assign({
-      sprite: this.sprite,
-    }, this.updatePack);
+class Player extends Entity {
+  constructor(sprite) {
+    super(sprite);
+    this.go = {
+      up: false,
+      down: false,
+      left: false,
+      right: false
+    }
+    document.addEventListener("keydown",(e)=>{
+           if(e.key === "z" || e.key === "ArrowUp") this.go.up = true;
+      else if(e.key === "s" || e.key === "ArrowDown") this.go.down = true;
+      else if(e.key === "q" || e.key === "ArrowLeft") this.go.left = true;
+      else if(e.key === "d" || e.key === "ArrowRight") this.go.right = true;
+    });
+
+    document.addEventListener("keyup",(e)=>{
+           if(e.key === "z" || e.key === "ArrowUp") this.go.up = false;
+      else if(e.key === "s" || e.key === "ArrowDown") this.go.down = false;
+      else if(e.key === "q" || e.key === "ArrowLeft") this.go.left = false;
+      else if(e.key === "d" || e.key === "ArrowRight") this.go.right = false;
+    });
   }
 
-  get updatePack() {
-    return {
-      id: this.id,
-      animX: this.animX,
-      animY: this.animY,
-      z: this.z,
-      frame: this.frame,
-    };
+  update() {
+    super.update();
+
+    if(this.go.up) this.move(D.up);
+    else if(this.go.down) this.move(D.down);
+    else if(this.go.left) this.move(D.left);
+    else if(this.go.right) this.move(D.right);
   }
 }
 Entity.df = {up: 11, down: 2, left: 5, right: 8};
-
-module.exports = Entity;

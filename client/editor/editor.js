@@ -106,7 +106,7 @@ function loadCell(file) {
       defaultLevel: CELL.defaultLevel,
       terrain: CELL.terrain,
       props: CELL.props,
-      entities: CELL.rawEntities,
+      entities: CELL.entities,
       teleporters: CELL.teleporters
     }
     let jsonData = JSON.stringify(data);
