@@ -55,21 +55,25 @@ Tile.load([
 });
 
 var MAINLOOP;
+var Zoom = 2;
 var selfId;
 var cellId;
 
-function serval(str) {
-  connection.send(JSON.stringify({h: 'eval',data: str}));
-}
+const canvas = document.getElementById("mainframe");
+canvas.width = document.documentElement.clientWidth;
+canvas.height = document.documentElement.clientHeight;
+Cell.ctx = canvas.getContext("2d");
+refreshWindowSize = ()=>{
+  canvas.width = document.documentElement.clientWidth;
+  canvas.height = document.documentElement.clientHeight;
+  Cell.ctx.width = canvas.width;
+  Cell.ctx.height = canvas.height;
+};
+refreshWindowSize();
+window.addEventListener('resize', refreshWindowSize);
 
 function begin() {
   connection = new WebSocket('ws://localhost:2000');
-  const canvas = document.getElementById("mainframe");
-  canvas.width = document.documentElement.clientWidth;
-  canvas.height = document.documentElement.clientHeight;
-  Cell.ctx = canvas.getContext("2d");
-  Cell.ctx.width = canvas.width;
-  Cell.ctx.height = canvas.width;
 
   //listener
   connection.onmessage = (message)=>{
@@ -96,10 +100,12 @@ function begin() {
       case 'update':
         for(let entity of data.entities) {
           let ent = Cell.list[data.id].entities[entity.id];
-          ent.animX = entity.animX;
-          ent.animY = entity.animY;
-          ent.z = entity.z;
-          ent.frame = entity.frame;
+          if(ent) {
+            ent.animX = entity.animX;
+            ent.animY = entity.animY;
+            ent.z = entity.z;
+            ent.frame = entity.frame;
+          }
         }
         break;
 
@@ -113,6 +119,9 @@ function begin() {
     }
   }
 
+  function serval(str) {
+    connection.send(JSON.stringify({h: 'eval',data: str}));
+  }
 
   function keyboardInput(e, state) {
     for(let key of [
@@ -134,13 +143,14 @@ function begin() {
     keyboardInput(e, false);
   });
 
-
   MAINLOOP = setInterval(() => {
     Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
-    if(cellId) {
-      Cell.list[cellId].draw();
-      if(selfId)
-        document.getElementById("coos").innerHTML = "("+Math.floor(Cell.list[cellId].entities[selfId].animX / 32)+";"+Math.floor(Cell.list[cellId].entities[selfId].animY / 32)+";"+Cell.list[cellId].entities[selfId].z+")";
+    if(cellId && selfId) {
+      let Player = Cell.list[cellId].entities[selfId];
+      let ctrX = Math.round(Player.animX - Cell.ctx.width / (2 * Zoom));
+      let ctrY = Math.round(Player.animY - Cell.ctx.height / (2 * Zoom));
+      Cell.list[cellId].draw(ctrX, ctrY);
+      document.getElementById("coos").innerHTML = "("+Math.floor(Player.animX / 32)+";"+Math.floor(Player.animY / 32)+";"+Player.z+")";
     }
   }, 1000 / 30);
 }

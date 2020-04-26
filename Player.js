@@ -29,7 +29,7 @@ class Player extends Entity {
   }
 
   static onConnect(ws) {
-    let player = new Player("player", Cell.list["test"], 0, 0, 0, ws.id);
+    let player = new Player("player", Cell.list["test"], 7, 7, 0, ws.id);
 
     ws.onmsg("keyPress", (data)=>{
       player.pressing[data.input] = data.state;
