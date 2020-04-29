@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Entity = require("./Entity.js");
 const Prop = require("./Prop.js");
+const Inventory = require("./Inventory.js");
 
 class Cell {
   static load(list, callback) {
@@ -18,6 +19,14 @@ class Cell {
     this.defaultLevel = data.defaultLevel;
     this.terrain = data.terrain;
     this.props = data.props;
+    for(let z in this.props) {
+      for(let prop of this.props[z]) {
+        if(prop.chest) {
+          let id = this.id + "-" + prop.id + "-" + prop.x + "-" + prop.y + "-" + z;
+          prop.inventory = new Inventory(prop.chest.size, prop.chest.items, id);
+        }
+      }
+    }
     this.teleporters = data.teleporters;
     this.entities = [];
     for(let entity of data.entities)
@@ -33,7 +42,7 @@ class Cell {
       if(x >= prop.x && x < prop.x + propObj.width
       && y >= prop.y && y < prop.y + propObj.height) {
         let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
-        return {...propObj, tileNb: tileNb};
+        return {...propObj, tileNb: tileNb, ...prop};
       }
     }
   }
@@ -60,10 +69,17 @@ class Cell {
     for(let i in this.entities) {
       entities.push(this.entities[i].initPack);
     }
+    let props = [];
+    for(let z in this.props) {
+      props[z] = [];
+      for(let prop of this.props[z]) {
+        props[z].push({id: prop.id, x: prop.x, y: prop.y});
+      }
+    }
     return {
       id: this.id,
       terrain: this.terrain,
-      props: this.props,
+      props: props,
       entities: entities,
     };
   }

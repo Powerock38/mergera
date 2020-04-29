@@ -42,6 +42,7 @@ Tile.load([
     "tree",
     "cherrytree-trunk",
     "cherrytree-top",
+    "wooden-chest-front",
   ],()=>{
     console.log("All props loaded !");
     Spritesheet.load([
@@ -72,9 +73,13 @@ refreshWindowSize = ()=>{
 refreshWindowSize();
 window.addEventListener('resize', refreshWindowSize);
 
+
+function serval(str) {
+  connection.send(JSON.stringify({h: 'eval',data: str}));
+}
+
 function begin() {
   connection = new WebSocket('ws://localhost:2000');
-
   //listener
   connection.onmessage = (message)=>{
     let msg = JSON.parse(message.data);
@@ -114,13 +119,21 @@ function begin() {
           delete Cell.list[data.id].entities[id];
         break;
 
-      default:
-        console.log("erroned message received");
-    }
-  }
+      case 'inventory':
+        if(Inventory.list[data.id]) {
+          let inv = Inventory.list[data.id];
+          inv.items = data.items;
+          inv.size = data.size;
+        } else {
+          new Inventory(data.id, data.items, data.size);
+        }
+        if(data.open)
+          Inventory.list[data.id].open();
+        break;
 
-  function serval(str) {
-    connection.send(JSON.stringify({h: 'eval',data: str}));
+      default:
+        console.error("erroned message received : " + msg.h);
+    }
   }
 
   function keyboardInput(e, state) {
@@ -129,6 +142,7 @@ function begin() {
       {key:["s","ArrowDown"], action:"down"},
       {key:["q","ArrowLeft"], action:"left"},
       {key:["d","ArrowRight"], action:"right"},
+      {key:["e"], action:"use"},
     ]) {
       if(key.key.includes(e.key))
         connection.send(JSON.stringify({h: 'keyPress', data: {input: key.action, state: state}}));
@@ -141,6 +155,15 @@ function begin() {
 
   document.addEventListener('keyup', (e) => {
     keyboardInput(e, false);
+  });
+
+  //client-side controls
+  document.addEventListener('keypress', (e) => {
+    switch(e.key) {
+      case 'i':
+        Inventory.list[selfId].open();
+        break;
+    }
   });
 
   MAINLOOP = setInterval(() => {

@@ -1,3 +1,7 @@
+html, body {
+  width: 100%;
+}
+
 body {
   margin: 0;
   overflow: hidden;
@@ -5,8 +9,13 @@ body {
   color: white;
 }
 
-#coos {
+#hud {
   position: absolute;
   top:0;
   left:0;
+  width: 100%;
+}
+
+#cmd {
+  width: 100%;
 }

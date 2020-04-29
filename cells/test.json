@@ -57,6 +57,16 @@
       "id": "brick-stairs-up",
       "x": 0,
       "y": 8
+    }, {
+      "id": "wooden-chest-front",
+      "x": 10,
+      "y": 10,
+      "chest": {
+        "size": 30,
+        "items": [
+          {"id": "item-test", "amount": 2}
+        ]
+      }
     }],
     [{
       "id": "cherrytree-top",

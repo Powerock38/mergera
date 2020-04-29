@@ -53,7 +53,7 @@ class Cell {
         }
       }
     }
-    console.log(tilesDrawn + " tiles, " + propsDrawn + " props, " + entitiesDrawn + " entities");
+    //console.log(tilesDrawn + " tiles, " + propsDrawn + " props, " + entitiesDrawn + " entities");
     Cell.ctx.restore();
   }
 }

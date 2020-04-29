@@ -27,6 +27,26 @@ uuid = ()=>{
   });
 }
 
+// Load objects
+Prop.load([
+  {id:"brick-stairs-up", stairs: D.up, block:[[D.left, D.right]]},
+  {id:"brick-stairs-left", stairs: D.left, block:[null, [D.up, D.down, D.left, D.right]]},
+  {id:"boat", block:[[D.up, D.down, D.left, D.right]]},
+  {id:"tree"},
+  {id:"cherrytree-trunk", block:[null, [D.up]]},
+  {id:"cherrytree-top"},
+  {id:"wooden-chest-front"},
+],()=>{
+  console.log("All props loaded");
+  Cell.load([
+    "test",
+    "test2"
+  ], ()=>{
+    console.log("All cells loaded");
+    begin();
+  })
+});
+
 wss.on('connection', (ws)=>{
   ws.id = uuid();
   SOCKET_LIST[ws.id] = ws;
@@ -82,25 +102,6 @@ wss.on('connection', (ws)=>{
       }
     });
   }
-});
-
-// Load objects
-Prop.load([
-  {id:"brick-stairs-up", stairs: D.up, block:[[D.left, D.right]]},
-  {id:"brick-stairs-left", stairs: D.left, block:[null, [D.up, D.down, D.left, D.right]]},
-  {id:"boat", block:[[D.up, D.down, D.left, D.right]]},
-  {id:"tree"},
-  {id:"cherrytree-trunk", block:[null, [D.up]]},
-  {id:"cherrytree-top"},
-],()=>{
-  console.log("All props loaded");
-  Cell.load([
-    "test",
-    "test2"
-  ], ()=>{
-    console.log("All cells loaded");
-    begin();
-  })
 });
 
 function packIsNotEmpty(pack) {

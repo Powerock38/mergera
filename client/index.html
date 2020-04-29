@@ -9,10 +9,15 @@
     <script src="Classes/Spritesheet.js" charset="utf-8"></script>
     <script src="Classes/Cell.js" charset="utf-8"></script>
     <script src="Classes/Entity.js" charset="utf-8"></script>
+    <script src="Classes/Inventory.js" charset="utf-8"></script>
     <script src="client.js" charset="utf-8" defer></script>
   </head>
   <body>
-    <span id="coos"></span>
+    <div id="hud">
+      <span id="coos"></span>
+      <input type="text" id="cmd" value="">
+      <button type="button" onclick="serval(document.querySelector('#cmd').value)">⚙</button>
+    </div>
     <canvas id="mainframe"></canvas>
   </body>
 </html>

@@ -1,15 +1,13 @@
 const Entity = require("./Entity.js");
 const Cell = require("./Cell.js");
+const Inventory = require("./Inventory.js");
 
 class Player extends Entity {
   constructor(sprite, cell, x, y, z, id) {
     super(sprite, cell, x, y, z, id);
-    this.pressing = {
-      up: false,
-      down: false,
-      left: false,
-      right: false
-    }
+    this.pressing = {};
+    this.canUse = true;
+    this.inventory = new Inventory(30, [], this.id, [this.id]);
     Player.list[this.id] = this;
   }
 
@@ -19,6 +17,22 @@ class Player extends Entity {
     else if(this.pressing.down) this.move(D.down);
     else if(this.pressing.left) this.move(D.left);
     else if(this.pressing.right) this.move(D.right);
+
+    if(this.pressing.use) this.use();
+  }
+
+  use() {
+    if(this.canUse) {
+      this.canUse = false;
+      let frontProp = this.adjProps[this.facing];
+      if(frontProp && frontProp.chest) {
+        frontProp.inventory.open(this.id);
+      }
+      console.log(frontProp);
+      setTimeout(()=>{
+        this.canUse = true;
+      }, 500);
+    }
   }
 
   setCell(cell, x, y, z) {
@@ -36,6 +50,9 @@ class Player extends Entity {
     });
 
     ws.ssend("selfId", ws.id);
+    player.inventory.send(ws);
+
+    Player.lastplayer = player;
   }
 
   static onDisconnect(ws) {
@@ -44,5 +61,6 @@ class Player extends Entity {
   }
 }
 Player.list = [];
+Player.lastplayer;
 
 module.exports = Player;
