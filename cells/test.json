@@ -59,12 +59,13 @@
       "y": 8
     }, {
       "id": "wooden-chest-front",
-      "x": 10,
-      "y": 10,
+      "x": 7,
+      "y": 8,
       "chest": {
         "size": 30,
         "items": [
-          {"id": "item-test", "amount": 2}
+          {"id": "hat", "amount": 2},
+          {"id": "gun", "amount": 1}
         ]
       }
     }],

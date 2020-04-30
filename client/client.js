@@ -50,37 +50,47 @@ Tile.load([
       "dog"
     ],()=>{
       console.log("All sprites loaded !");
-      begin();
+      Item.load([
+        {id:"hat", name:"Hat", desc:"A weird hat, but a hat nonetheless"},
+        {id:"gun", name:"Gun", desc:"Gotta do da job 😤"},
+      ],()=>{
+        console.log("All items loaded !");
+        begin();
+      });
     });
   });
 });
 
-var MAINLOOP;
-var Zoom = 2;
-var selfId;
-var cellId;
+const hud = {};
+for(let hudElem of [
+  "mainframe",
+  "inventory",
+  "inventoryAround",
+  "container",
+  "containerAround",
+  "coos",
+  "cmd",
+]) hud[hudElem] = document.getElementById(hudElem);
 
-const canvas = document.getElementById("mainframe");
-canvas.width = document.documentElement.clientWidth;
-canvas.height = document.documentElement.clientHeight;
-Cell.ctx = canvas.getContext("2d");
+hud.mainframe.width = document.documentElement.clientWidth;
+hud.mainframe.height = document.documentElement.clientHeight;
+Cell.ctx = hud.mainframe.getContext("2d");
 refreshWindowSize = ()=>{
-  canvas.width = document.documentElement.clientWidth;
-  canvas.height = document.documentElement.clientHeight;
-  Cell.ctx.width = canvas.width;
-  Cell.ctx.height = canvas.height;
+  hud.mainframe.width = document.documentElement.clientWidth;
+  hud.mainframe.height = document.documentElement.clientHeight;
+  Cell.ctx.width = hud.mainframe.width;
+  Cell.ctx.height = hud.mainframe.height;
 };
 refreshWindowSize();
 window.addEventListener('resize', refreshWindowSize);
 
-
-function serval(str) {
-  connection.send(JSON.stringify({h: 'eval',data: str}));
-}
+var Zoom = 2;
+var selfId;
+var cellId;
 
 function begin() {
-  connection = new WebSocket('ws://localhost:2000');
   //listener
+  connection = new WebSocket('ws://localhost:2000');
   connection.onmessage = (message)=>{
     let msg = JSON.parse(message.data);
     let data = msg.data;
@@ -112,6 +122,7 @@ function begin() {
             ent.frame = entity.frame;
           }
         }
+        update();
         break;
 
       case 'remove':
@@ -120,15 +131,20 @@ function begin() {
         break;
 
       case 'inventory':
-        if(Inventory.list[data.id]) {
-          let inv = Inventory.list[data.id];
-          inv.items = data.items;
-          inv.size = data.size;
-        } else {
-          new Inventory(data.id, data.items, data.size);
-        }
-        if(data.open)
-          Inventory.list[data.id].open();
+        if(Inventory.main)
+          Inventory.main.update(data.items, data.size);
+        else
+          new Inventory(data.items, data.size);
+        break;
+
+      case 'container':
+        if(Container.list[data.id])
+          Container.list[data.id].update(data.items, data.size);
+        else new Container(data.id, data.items, data.size);
+        if(data.open === true)
+          Container.list[data.id].open();
+        else if(data.open === false)
+          Container.list[data.id].close();
         break;
 
       default:
@@ -160,20 +176,25 @@ function begin() {
   //client-side controls
   document.addEventListener('keypress', (e) => {
     switch(e.key) {
-      case 'i':
-        Inventory.list[selfId].open();
+      case 'a':
+        Inventory.main.toggle();
+        break;
+
+      case 'Enter':
+        connection.send(JSON.stringify({h: 'eval', data: hud.cmd.value}));
         break;
     }
   });
 
-  MAINLOOP = setInterval(() => {
+  Cell.ctx.imageSmoothingEnabled = false;
+  function update() {
     Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
     if(cellId && selfId) {
       let Player = Cell.list[cellId].entities[selfId];
       let ctrX = Math.round(Player.animX - Cell.ctx.width / (2 * Zoom));
       let ctrY = Math.round(Player.animY - Cell.ctx.height / (2 * Zoom));
       Cell.list[cellId].draw(ctrX, ctrY);
-      document.getElementById("coos").innerHTML = "("+Math.floor(Player.animX / 32)+";"+Math.floor(Player.animY / 32)+";"+Player.z+")";
+      hud.coos.textContent = "("+Math.floor(Player.animX / 32)+";"+Math.floor(Player.animY / 32)+";"+Player.z+")";
     }
-  }, 1000 / 30);
+  }
 }

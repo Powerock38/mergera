@@ -1,13 +1,15 @@
 const Entity = require("./Entity.js");
 const Cell = require("./Cell.js");
 const Inventory = require("./Inventory.js");
+const Container = require("./Container.js");
 
 class Player extends Entity {
   constructor(sprite, cell, x, y, z, id) {
     super(sprite, cell, x, y, z, id);
     this.pressing = {};
     this.canUse = true;
-    this.inventory = new Inventory(30, [], this.id, [this.id]);
+    this.viewing = null;
+    this.inventory = new Inventory(30, [{id:"gun",amount:1}], this.id, this);
     Player.list[this.id] = this;
   }
 
@@ -24,14 +26,17 @@ class Player extends Entity {
   use() {
     if(this.canUse) {
       this.canUse = false;
-      let frontProp = this.adjProps[this.facing];
-      if(frontProp && frontProp.chest) {
-        frontProp.inventory.open(this.id);
-      }
-      console.log(frontProp);
       setTimeout(()=>{
         this.canUse = true;
-      }, 500);
+      }, 300);
+      if(this.viewing) {
+        Container.list[this.viewing].close(this);
+        return;
+      }
+      let frontProp = this.adjProps[this.facing];
+      if(frontProp && frontProp.chest) {
+        frontProp.container.open(this);
+      }
     }
   }
 
@@ -42,6 +47,12 @@ class Player extends Entity {
       SOCKET_LIST[this.id].ssend("init", this.cell.initPack);
   }
 
+  move(dir) {
+    super.move(dir);
+    if(this.viewing)
+      Container.list[this.viewing].close(this);
+  }
+
   static onConnect(ws) {
     let player = new Player("player", Cell.list["test"], 7, 7, 0, ws.id);
 
@@ -50,7 +61,7 @@ class Player extends Entity {
     });
 
     ws.ssend("selfId", ws.id);
-    player.inventory.send(ws);
+    player.inventory.update();
 
     Player.lastplayer = player;
   }

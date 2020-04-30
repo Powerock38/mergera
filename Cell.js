@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Entity = require("./Entity.js");
 const Prop = require("./Prop.js");
-const Inventory = require("./Inventory.js");
+const Container = require("./Container.js");
 
 class Cell {
   static load(list, callback) {
@@ -23,7 +23,7 @@ class Cell {
       for(let prop of this.props[z]) {
         if(prop.chest) {
           let id = this.id + "-" + prop.id + "-" + prop.x + "-" + prop.y + "-" + z;
-          prop.inventory = new Inventory(prop.chest.size, prop.chest.items, id);
+          prop.container = new Container(prop.chest.size, prop.chest.items, id);
         }
       }
     }

@@ -145,7 +145,7 @@ class Entity {
     }
   }
 
-  move(dir) {
+  move(dir) { //override in Player
     if(this.facing !== dir) {
       this.facing = dir;
     } else if(this.canMove(dir) || (this.adjProps.on && this.adjProps.on.stairs === dir)) {

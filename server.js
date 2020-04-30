@@ -19,6 +19,7 @@ const Entity = require("./Entity.js");
 const Player = require("./Player.js");
 const Cell = require("./Cell.js");
 const Prop = require("./Prop.js");
+const Container = require("./Container.js");
 
 uuid = ()=>{
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -35,7 +36,7 @@ Prop.load([
   {id:"tree"},
   {id:"cherrytree-trunk", block:[null, [D.up]]},
   {id:"cherrytree-top"},
-  {id:"wooden-chest-front"},
+  {id:"wooden-chest-front", block:[[D.up, D.down, D.left, D.right]]},
 ],()=>{
   console.log("All props loaded");
   Cell.load([
