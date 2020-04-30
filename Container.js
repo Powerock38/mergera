@@ -7,7 +7,7 @@ class Container extends Inventory {
   }
 
   send(ws, open) { // open = true => this inventory will open on the client
-    ws.ssend("container", {
+    ws.emit("container", {
       id: this.id,
       items: this.items,
       size: this.size,
@@ -18,11 +18,19 @@ class Container extends Inventory {
   open(player) {
     player.viewing = this.id;
     this.send(SOCKET_LIST[player.id], true);
+    SOCKET_LIST[player.id].of("inv:"+this.id).on("moveToMyInventory", (data)=>{
+      this.moveToInventory(data.id, data.amount, player.inventory);
+    });
+    SOCKET_LIST[player.id].on("moveToContainer", (data)=>{
+      player.inventory.moveToInventory(data.id, data.amount, this);
+    });
   }
 
   close(player) {
     player.viewing = null;
     this.send(SOCKET_LIST[player.id], false);
+    SOCKET_LIST[player.id].of("inv:"+this.id).removeAllListeners("moveToMyInventory");
+    SOCKET_LIST[player.id].removeAllListeners("moveToContainer");
   }
 
   update(open) {

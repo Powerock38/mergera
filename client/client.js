@@ -91,11 +91,23 @@ var cellId;
 function begin() {
   //listener
   connection = new WebSocket('ws://localhost:2000');
+  //custom functions
+  connection.emit = (ev, data, channel)=>{
+    let obj;
+    if(channel) obj = {a: [ev, data], c: channel};
+    else obj = {a: [ev, data]};
+    connection.send(JSON.stringify(obj));
+  }
   connection.onmessage = (message)=>{
     let msg = JSON.parse(message.data);
-    let data = msg.data;
+    let ev = msg.a[0];
+    let data = msg.a[1];
 
-    switch(msg.h) {
+    switch(ev) {
+      case 'connect':
+        console.log("Connected to server");
+        break;
+
       case 'selfId':
         selfId = data;
         break;
@@ -131,24 +143,27 @@ function begin() {
         break;
 
       case 'inventory':
-        if(Inventory.main)
-          Inventory.main.update(data.items, data.size);
-        else
-          new Inventory(data.items, data.size);
+        Inventory.main.update(data.items, data.size);
+        if(Inventory.main.displayed)
+          Inventory.main.draw();
         break;
 
       case 'container':
         if(Container.list[data.id])
           Container.list[data.id].update(data.items, data.size);
         else new Container(data.id, data.items, data.size);
+
         if(data.open === true)
           Container.list[data.id].open();
         else if(data.open === false)
           Container.list[data.id].close();
+
+        if(Container.list[data.id].displayed)
+          Container.list[data.id].draw();
         break;
 
       default:
-        console.error("erroned message received : " + msg.h);
+        console.error("erroned message received : " + ev);
     }
   }
 
@@ -161,7 +176,7 @@ function begin() {
       {key:["e"], action:"use"},
     ]) {
       if(key.key.includes(e.key))
-        connection.send(JSON.stringify({h: 'keyPress', data: {input: key.action, state: state}}));
+        connection.emit("keyPress", {input: key.action, state: state});
     }
   }
 
@@ -181,7 +196,7 @@ function begin() {
         break;
 
       case 'Enter':
-        connection.send(JSON.stringify({h: 'eval', data: hud.cmd.value}));
+        connection.emit("eval", hud.cmd.value);
         break;
     }
   });

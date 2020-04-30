@@ -21,9 +21,17 @@ class Inventory {
     hud.inventory.innerHTML = "";
     for(let i = 0; i < this.size; i++) {
       let item = this.items[i];
-      if(item && Item.list[item.id])
-        Item.list[item.id].draw(hud.inventory, item.amount);
-      else {
+      if(item && Item.list[item.id]) {
+        let elem = Item.list[item.id].draw(item.amount);
+        elem.onclick = ()=>{
+          connection.emit("moveToContainer", {
+            id: item.id,
+            amount: 1, //item.amount,
+            //slot: null
+          });
+        }
+        hud.inventory.appendChild(elem);
+      } else {
         Item.drawEmpty(hud.inventory);
       }
     }
@@ -41,3 +49,4 @@ class Inventory {
   }
 }
 Inventory.main;
+new Inventory([], 1);

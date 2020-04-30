@@ -26,6 +26,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "image-size": "^0.8.3",
-    "ws": "^7.2.3"
+    "ws": "^7.2.5",
+    "ws-server-wrapper": "^1.5.0"
   }
 }

@@ -44,7 +44,7 @@ class Player extends Entity {
     let changed = super.setCell(cell, x, y, z);
 
     if(changed)
-      SOCKET_LIST[this.id].ssend("init", this.cell.initPack);
+      SOCKET_LIST[this.id].emit("init", this.cell.initPack);
   }
 
   move(dir) {
@@ -56,11 +56,11 @@ class Player extends Entity {
   static onConnect(ws) {
     let player = new Player("player", Cell.list["test"], 7, 7, 0, ws.id);
 
-    ws.onmsg("keyPress", (data)=>{
+    ws.on("keyPress", (data)=>{
       player.pressing[data.input] = data.state;
     });
 
-    ws.ssend("selfId", ws.id);
+    ws.emit("selfId", ws.id);
     player.inventory.update();
 
     Player.lastplayer = player;

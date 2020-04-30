@@ -13,7 +13,15 @@ class Inventory {
     }
   }
 
-  moveItem(id, slot) {
+  moveToInventory(id, amount, inventory) { // false = failed; true = all good
+    if(this.removeItem(id, amount)) {
+      if(inventory.addItem(id, amount))
+        //inventory.moveItem(id, slot);
+      return true;
+    } else return false;
+  }
+
+  moveItem(id, slot) { // false = item already in this slot; true = all good
     if(this.items[slot])
       return false;
     for(let i in this.items) {
@@ -26,12 +34,12 @@ class Inventory {
     }
   }
 
-  addItem(id, amount) {
+  addItem(id, amount) { // false = incremented amount; true = made a new item
     for(let i in this.items) {
       if(this.items[i] && this.items[i].id === id) {
         this.items[i].amount += amount;
         this.update();
-        return;
+        return false;
       }
     }
 
@@ -40,9 +48,10 @@ class Inventory {
       amount: amount
     };
     this.update();
+    return true;
   }
 
-  removeItem(id, amount) { // return false = cant remove more than available / true = all good
+  removeItem(id, amount) { // false = failed; true = all good
     for(let i in this.items) {
       if(this.items[i] && this.items[i].id === id) {
         if(this.items[i].amount < amount)
@@ -57,6 +66,7 @@ class Inventory {
         return true;
       }
     }
+    return false;
   }
 
   hasItem(id, amount) {
@@ -65,11 +75,12 @@ class Inventory {
         return this.items[i].amount >= amount;
       }
     }
+    return false;
   }
 
   update() {
     //this.owner.updateStats();
-    SOCKET_LIST[this.owner.id].ssend("inventory", {
+    SOCKET_LIST[this.owner.id].emit("inventory", {
       id: this.id,
       items: this.items,
       size: this.size,

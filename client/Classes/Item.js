@@ -18,10 +18,10 @@ class Item {
     Item.list[this.id] = this;
   }
 
-  draw(parent, amount) {
+  draw(amount) {
     let element = document.createElement("span");
     let legend = document.createElement("span");
-    legend.innerHTML =`<b>${this.name}</b> <br> <i>${this.desc}</i>`;
+    legend.innerHTML =`<b>${this.name}</b><br><i>${this.desc}</i>`;
     legend.classList.add("legend");
     element.classList.add("item");
     element.appendChild(this.image.cloneNode());
@@ -32,7 +32,7 @@ class Item {
       element.appendChild(amnt);
     }
     element.appendChild(legend);
-    parent.appendChild(element);
+    return element;
   }
 
   static drawEmpty(parent) {

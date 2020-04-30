@@ -9,7 +9,9 @@ app.get('/',(req,res)=>{
 app.use('/client',express.static(__dirname + '/client'));
 app.use(express.static(__dirname + '/client'));
 
-const wss = new WebSocket.Server({ server });
+const WebSocketServer = require("ws").Server;
+const WebSocketServerWrapper = require("ws-server-wrapper");
+const wss = new WebSocketServerWrapper(new WebSocketServer({ server }));
 
 SOCKET_LIST = [];
 DEBUG = true;
@@ -48,51 +50,25 @@ Prop.load([
   })
 });
 
-wss.on('connection', (ws)=>{
+wss.on("connection", (ws)=>{
   ws.id = uuid();
   SOCKET_LIST[ws.id] = ws;
-  console.log('socket connection ' + ws.id);
-
-  //custom functions
-  ws.ssend = (header, data) => {
-    let pack = {h: header, data: data};
-    try {
-      let jsonPack = JSON.stringify(pack);
-      ws.send(jsonPack);
-    }
-    catch(err) {
-      console.error(err);
-    }
-  }
-  ws.onmsg = (header, callback) => {
-    ws.on('message', (jsonPack)=>{
-      try {
-        let pack = JSON.parse(jsonPack);
-        if(pack.h === header) {
-          callback(pack.data);
-        }
-      }
-      catch(err) {
-        console.error(err);
-      }
-    });
-  }
-
+  console.log("socket connection " + ws.id);
   Player.onConnect(ws);
 
-  ws.on('close',(e)=>{
+  ws.on("close",()=>{
     Player.onDisconnect(ws);
     delete SOCKET_LIST[ws.id];
-    console.log("socket deconnection " + ws.id + " (" + e + ")");
+    console.log("socket deconnection " + ws.id);
   });
 
-  ws.on('error',(e)=>{
+  ws.on("error",(e)=>{
     return console.error(e);
   });
 
   //serval()
   if(DEBUG) {
-    ws.onmsg("eval",(data)=>{
+    ws.on("eval",(data)=>{
       try {
         eval(data);
       }
@@ -115,12 +91,11 @@ function packIsNotEmpty(pack) {
   return !empty;
 }
 
+server.listen(2000);
+console.log("Server started");
+
 var MAINLOOP;
-
 function begin() {
-  server.listen(2000);
-  console.log("Server started");
-
   MAINLOOP = setInterval(() => {
     for(let i in Cell.list) {
       Cell.list[i].update();
@@ -131,12 +106,12 @@ function begin() {
       let player = Player.list[ws.id];
 
       if(packIsNotEmpty(player.cell.nextInitPack))
-        ws.ssend("init", player.cell.nextInitPack);
+        ws.emit("init", player.cell.nextInitPack);
 
       if(packIsNotEmpty(player.cell.nextRemovePack))
-        ws.ssend("remove", player.cell.nextRemovePack);
+        ws.emit("remove", player.cell.nextRemovePack);
 
-      ws.ssend("update", player.cell.updatePack);
+      ws.emit("update", player.cell.updatePack);
     }
 
     for(let i in Cell.list) {
