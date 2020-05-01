@@ -33,7 +33,7 @@ uuid = ()=>{
 // Load objects
 Prop.load([
   {id:"brick-stairs-up", stairs: D.up, block:[[D.left, D.right]]},
-  {id:"brick-stairs-left", stairs: D.left, block:[null, [D.up, D.down, D.left, D.right]]},
+  {id:"brick-stairs-left", stairs: D.left, block:[[D.up], [D.up, D.down, D.left, D.right]]},
   {id:"boat", block:[[D.up, D.down, D.left, D.right]]},
   {id:"tree"},
   {id:"cherrytree-trunk", block:[null, [D.up]]},

@@ -22,4 +22,4 @@ class Prop {
     Cell.ctx.drawImage(this.image, x * 32, y * 32);
   }
 }
-Prop.list = {};
+Prop.list = [];

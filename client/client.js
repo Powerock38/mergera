@@ -135,10 +135,9 @@ function begin() {
         for(let entity of data.entities) {
           let ent = Cell.list[data.id].entities[entity.id];
           if(ent) {
-            ent.animX = entity.animX;
-            ent.animY = entity.animY;
-            ent.z = entity.z;
-            ent.frame = entity.frame;
+            for(let p in entity) {
+              ent[p] = entity[p];
+            }
           }
         }
         update();

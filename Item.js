@@ -16,7 +16,7 @@ class Item {
 Item.list = [];
 
 Item.load([
-  {id:"boots", speed: -3},
+  {id:"boots", speed: 1},
 ]);
 
 module.exports = Item;
