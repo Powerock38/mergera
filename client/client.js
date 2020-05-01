@@ -131,6 +131,7 @@ function begin() {
         break;
 
       case 'update':
+        cellId = data.id;
         for(let entity of data.entities) {
           let ent = Cell.list[data.id].entities[entity.id];
           if(ent) {

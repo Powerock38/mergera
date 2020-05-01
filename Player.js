@@ -72,7 +72,7 @@ class Player extends Entity {
         return;
       }
       let frontProp = this.adjProps[this.facing];
-      if(frontProp && frontProp.chest) {
+      if(frontProp?.chest) {
         frontProp.container.open(this);
       }
     }

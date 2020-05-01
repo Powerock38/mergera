@@ -87,7 +87,7 @@ class Entity {
     this.animY = y;
   }
 
-  updateTP() { //maybe move this in Cell
+  updateTP() {
     for(let tp of this.cell.teleporters) {
       if(this.facing === tp.facing
       && this.z >= tp.z1 && this.z <= tp.z2
@@ -101,7 +101,6 @@ class Entity {
 
   update() { //override in Player
     this.updateAnimation();
-    this.updateTP();
   }
 
   afterMove(dir) {
@@ -114,8 +113,9 @@ class Entity {
     } else if(dir === D.right) {
       this.x++;
     }
-    if(this.belowProps.on && this.belowProps.on.stairs)
+    if(this.belowProps.on?.stairs)
       this.z--;
+    this.updateTP();
   }
 
   canMove(dir) {
@@ -123,24 +123,18 @@ class Entity {
       if(going > 0) return false;
 
     let onProp = this.adjProps.on;
-    if(onProp && onProp.stairs === dir)
+    if(onProp?.stairs === dir)
       return true;
 
-    if(onProp
-    && onProp.block
-    && onProp.block[onProp.tileNb]
-    && onProp.block[onProp.tileNb].includes(dir))
+    if(onProp?.block?.[onProp.tileNb]?.includes(dir))
       return false;
 
     let can = true;
     for(let d of Object.values(D)) {
       if(dir === d) {
-        let frontTile = this.adjTiles[d];
         let frontProp = this.adjProps[d];
-        let belowProp = this.belowProps[d];
-        can = frontTile && frontTile !== "";
-        can = can || (belowProp && belowProp.stairs);
-        if(frontProp && frontProp.block && frontProp.block[frontProp.tileNb])
+        can = Boolean(this.adjTiles[d]) || this.belowProps[d]?.stairs;
+        if(frontProp?.block?.[frontProp.tileNb])
           can = !frontProp.block[frontProp.tileNb].includes({"up":D.down, "down":D.up, "left":D.right, "right":D.left}[dir]);
         return can;
       }
@@ -166,9 +160,10 @@ class Entity {
       } else if(dir === D.right) {
         this.going.right = this.stats.speed;
       }
-      if(this.adjProps.on && this.adjProps.on.stairs === dir)
+      if(this.adjProps.on?.stairs === dir)
         this.z++;
     }
+    this.updateTP();
   }
 
   //NET CODE
