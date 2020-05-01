@@ -119,29 +119,29 @@ class Entity {
   }
 
   canMove(dir) {
-    for(let going of Object.values(this.going)) {
+    for(let going of Object.values(this.going))
       if(going > 0) return false;
-    }
 
-    if(this.adjProps.on
-    && this.adjProps.on.block
-    && this.adjProps.on.block[this.adjProps.on.tileNb]
-    && this.adjProps.on.block[this.adjProps.on.tileNb].includes(dir))
+    let onProp = this.adjProps.on;
+    if(onProp && onProp.stairs === dir)
+      return true;
+
+    if(onProp
+    && onProp.block
+    && onProp.block[onProp.tileNb]
+    && onProp.block[onProp.tileNb].includes(dir))
       return false;
 
     let can = true;
     for(let d of Object.values(D)) {
       if(dir === d) {
-        let od; //opposite direction
-             if(d === D.up)    od = D.down;
-        else if(d === D.down)  od = D.up;
-        else if(d === D.left)  od = D.right;
-        else if(d === D.right) od = D.left;
-
-        can = this.adjTiles[d] && this.adjTiles[d] !== "";
-        can = can || (this.belowProps[d] && this.belowProps[d].stairs);
-        if(this.adjProps[d] && this.adjProps[d].block && this.adjProps[d].block[this.adjProps[d].tileNb])
-          can = !this.adjProps[d].block[this.adjProps[d].tileNb].includes(od);
+        let frontTile = this.adjTiles[d];
+        let frontProp = this.adjProps[d];
+        let belowProp = this.belowProps[d];
+        can = frontTile && frontTile !== "";
+        can = can || (belowProp && belowProp.stairs);
+        if(frontProp && frontProp.block && frontProp.block[frontProp.tileNb])
+          can = !frontProp.block[frontProp.tileNb].includes({"up":D.down, "down":D.up, "left":D.right, "right":D.left}[dir]);
         return can;
       }
     }
@@ -150,7 +150,7 @@ class Entity {
   move(dir) { //override in Player
     if(this.facing !== dir) {
       this.facing = dir;
-    } else if(this.canMove(dir) || (this.adjProps.on && this.adjProps.on.stairs === dir)) {
+    } else if(this.canMove(dir)) {
       this.going = {
         up: 0,
         down: 0,
