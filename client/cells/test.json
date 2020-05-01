@@ -65,7 +65,8 @@
         "size": 30,
         "items": [
           {"id": "hat", "amount": 2},
-          {"id": "gun", "amount": 1}
+          {"id": "gun", "amount": 1},
+          {"id": "boots", "amount": 1}
         ]
       }
     }],

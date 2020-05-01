@@ -2,15 +2,53 @@ const Entity = require("./Entity.js");
 const Cell = require("./Cell.js");
 const Inventory = require("./Inventory.js");
 const Container = require("./Container.js");
+const Item = require("./Item.js");
 
 class Player extends Entity {
-  constructor(sprite, cell, x, y, z, id) {
+  static onConnect(ws) {
+    let player = new Player(ws, ws.id, "player", Cell.list["test"], 7, 7, 0);
+
+    ws.on("keyPress", (data)=>{
+      player.pressing[data.input] = data.state;
+    });
+
+    ws.emit("selfId", player.id);
+
+    player.inventory.update();
+
+    Player.lastplayer = player;
+  }
+
+  static onDisconnect(ws) {
+    Player.list[ws.id].cell.removeEntity(ws.id);
+    delete Player.list[ws.id];
+  }
+
+  constructor(ws, id, sprite, cell, x, y, z) {
     super(sprite, cell, x, y, z, id);
+    this.ws = ws;
     this.pressing = {};
     this.canUse = true;
     this.viewing = null;
+    this.stats = {
+      ...this.stats,
+    };
+    this.ogstats = {...this.stats};
     this.inventory = new Inventory(30, [{id:"gun",amount:1}], this.id, this);
     Player.list[this.id] = this;
+  }
+
+  updateStats() {
+    let stats = {...this.ogstats};
+    for(let i in this.inventory.items) {
+      let item = this.inventory.items[i];
+      if(item && Item.list[item.id]) {
+        for(let stat in Item.list[item.id].stats) {
+          stats[stat] += Item.list[item.id].stats[stat];
+        }
+      }
+    }
+    this.stats = stats;
   }
 
   update() {
@@ -51,25 +89,6 @@ class Player extends Entity {
     super.move(dir);
     if(this.viewing)
       Container.list[this.viewing].close(this);
-  }
-
-  static onConnect(ws) {
-    let player = new Player("player", Cell.list["test"], 7, 7, 0, ws.id);
-
-    ws.on("keyPress", (data)=>{
-      player.pressing[data.input] = data.state;
-    });
-
-    ws.emit("selfId", ws.id);
-    
-    player.inventory.update();
-
-    Player.lastplayer = player;
-  }
-
-  static onDisconnect(ws) {
-    Player.list[ws.id].cell.removeEntity(ws.id);
-    delete Player.list[ws.id];
   }
 }
 Player.list = [];

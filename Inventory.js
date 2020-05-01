@@ -79,8 +79,8 @@ class Inventory {
   }
 
   update() {
-    //this.owner.updateStats();
-    SOCKET_LIST[this.owner.id].emit("inventory", {
+    this.owner.updateStats();
+    this.owner.ws.emit("inventory", {
       id: this.id,
       items: this.items,
       size: this.size,

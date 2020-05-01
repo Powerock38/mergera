@@ -17,20 +17,20 @@ class Container extends Inventory {
 
   open(player) {
     player.viewing = this.id;
-    this.send(SOCKET_LIST[player.id], true);
-    SOCKET_LIST[player.id].of("inv:"+this.id).on("moveToMyInventory", (data)=>{
+    this.send(player.ws, true);
+    player.ws.of("inv:"+this.id).on("moveToMyInventory", (data)=>{
       this.moveToInventory(data.id, data.amount, player.inventory);
     });
-    SOCKET_LIST[player.id].on("moveToContainer", (data)=>{
+    player.ws.on("moveToContainer", (data)=>{
       player.inventory.moveToInventory(data.id, data.amount, this);
     });
   }
 
   close(player) {
     player.viewing = null;
-    this.send(SOCKET_LIST[player.id], false);
-    SOCKET_LIST[player.id].of("inv:"+this.id).removeAllListeners("moveToMyInventory");
-    SOCKET_LIST[player.id].removeAllListeners("moveToContainer");
+    this.send(player.ws, false);
+    player.ws.of("inv:"+this.id).removeAllListeners("moveToMyInventory");
+    player.ws.removeAllListeners("moveToContainer");
   }
 
   update(open) {
@@ -43,8 +43,7 @@ class Container extends Inventory {
     }
 
     for(let viewer of viewers)
-      if(SOCKET_LIST[viewer.id])
-        this.send(SOCKET_LIST[viewer.id], null);
+      this.send(viewer.ws, null);
   }
 }
 Container.list = [];

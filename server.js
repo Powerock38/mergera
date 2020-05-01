@@ -101,17 +101,16 @@ function begin() {
       Cell.list[i].update();
     }
 
-    for(let i in SOCKET_LIST) {
-      let ws = SOCKET_LIST[i];
-      let player = Player.list[ws.id];
+    for(let i in Player.list) {
+      let player = Player.list[i];
 
       if(packIsNotEmpty(player.cell.nextInitPack))
-        ws.emit("init", player.cell.nextInitPack);
+        player.ws.emit("init", player.cell.nextInitPack);
 
       if(packIsNotEmpty(player.cell.nextRemovePack))
-        ws.emit("remove", player.cell.nextRemovePack);
+        player.ws.emit("remove", player.cell.nextRemovePack);
 
-      ws.emit("update", player.cell.updatePack);
+      player.ws.emit("update", player.cell.updatePack);
     }
 
     for(let i in Cell.list) {

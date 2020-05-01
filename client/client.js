@@ -53,6 +53,7 @@ Tile.load([
       Item.load([
         {id:"hat", name:"Hat", desc:"A weird hat, but a hat nonetheless"},
         {id:"gun", name:"Gun", desc:"Gotta do da job 😤"},
+        {id:"boots", name:"Boots", desc:"Good ol' leather boots"},
       ],()=>{
         console.log("All items loaded !");
         Cell.load([

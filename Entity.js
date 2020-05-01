@@ -5,13 +5,15 @@ class Entity {
     this.animY = y * 32;
     this.frame = 2;
     this.facing = D.down;
-    this.speed = 8;
     this.sprite = sprite;
     this.going = {
       up: 0,
       down: 0,
       left: 0,
       right: 0
+    };
+    this.stats = {
+      speed: 8,
     };
     this.setCell(cell, x, y, z);
   }
@@ -63,19 +65,19 @@ class Entity {
     let x = this.x * 32;
     let y = this.y * 32;
     if(this.going.up > 0) {
-      y += (this.going.up--) * (32 / this.speed) - 32;
+      y += (this.going.up--) * (32 / this.stats.speed) - 32;
       this.frame = (this.going.up % 3) + Entity.df.up - 1;
       if(this.going.up === 0) this.afterMove(D.up);
     } else if(this.going.down > 0) {
-      y -= (this.going.down--) * (32 / this.speed) - 32;
+      y -= (this.going.down--) * (32 / this.stats.speed) - 32;
       this.frame = (this.going.down % 3) + Entity.df.down - 1;
       if(this.going.down === 0) this.afterMove(D.down);
     } else if(this.going.left > 0) {
-      x += (this.going.left--) * (32 / this.speed) - 32;
+      x += (this.going.left--) * (32 / this.stats.speed) - 32;
       this.frame = (this.going.left % 3) + Entity.df.left - 1;
       if(this.going.left === 0) this.afterMove(D.left);
     } else if(this.going.right > 0) {
-      x -= (this.going.right--) * (32 / this.speed) - 32;
+      x -= (this.going.right--) * (32 / this.stats.speed) - 32;
       this.frame = (this.going.right % 3) + Entity.df.right - 1;
       if(this.going.right === 0) this.afterMove(D.right);
     } else {
@@ -156,13 +158,13 @@ class Entity {
         right: 0
       };
       if(dir === D.up) {
-        this.going.up = this.speed;
+        this.going.up = this.stats.speed;
       } else if(dir === D.down) {
-        this.going.down = this.speed;
+        this.going.down = this.stats.speed;
       } else if(dir === D.left) {
-        this.going.left = this.speed;
+        this.going.left = this.stats.speed;
       } else if(dir === D.right) {
-        this.going.right = this.speed;
+        this.going.right = this.stats.speed;
       }
       if(this.adjProps.on && this.adjProps.on.stairs === dir)
         this.z++;
