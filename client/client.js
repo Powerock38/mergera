@@ -55,7 +55,14 @@ Tile.load([
         {id:"gun", name:"Gun", desc:"Gotta do da job 😤"},
       ],()=>{
         console.log("All items loaded !");
-        begin();
+        Cell.load([
+          "test",
+          "test2"
+        ],()=>{
+          console.log("All cells loaded !");
+          hud.loading.remove();
+          begin();
+        })
       });
     });
   });
@@ -63,6 +70,7 @@ Tile.load([
 
 const hud = {};
 for(let hudElem of [
+  "loading",
   "mainframe",
   "inventory",
   "inventoryAround",
@@ -80,6 +88,7 @@ refreshWindowSize = ()=>{
   hud.mainframe.height = document.documentElement.clientHeight;
   Cell.ctx.width = hud.mainframe.width;
   Cell.ctx.height = hud.mainframe.height;
+  Cell.ctx.imageSmoothingEnabled = false;
 };
 refreshWindowSize();
 window.addEventListener('resize', refreshWindowSize);
@@ -91,7 +100,7 @@ var cellId;
 function begin() {
   //listener
   connection = new WebSocket('ws://localhost:2000');
-  //custom functions
+  //custom function
   connection.emit = (ev, data, channel)=>{
     let obj;
     if(channel) obj = {a: [ev, data], c: channel};
@@ -113,11 +122,7 @@ function begin() {
         break;
 
       case 'init':
-        if(data.terrain && data.props) {
-          new Cell(data.id, data.terrain, data.props);
-          cellId = data.id;
-        }
-
+        cellId = data.id;
         for(let i in data.entities) {
           let entity = data.entities[i];
           Cell.list[data.id].entities[entity.id] = new Entity(entity);
@@ -201,7 +206,6 @@ function begin() {
     }
   });
 
-  Cell.ctx.imageSmoothingEnabled = false;
   function update() {
     Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
     if(cellId && selfId) {

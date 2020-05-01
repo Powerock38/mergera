@@ -1,4 +1,22 @@
 class Cell {
+  static load(list, callback) {
+    let nbToLoad = list.length;
+    for(let cell of list) {
+      let xhr = new XMLHttpRequest();
+      xhr.open("GET", "./cells/" + cell + ".json", true);
+      xhr.onerror = ()=>{
+        console.error(xhr.statusText);
+      };
+      xhr.onload = ()=>{
+        let data = JSON.parse(xhr.responseText);
+        new Cell(cell, data.terrain, data.props);
+        console.log("Loaded cell " + cell);
+        --nbToLoad === 0 && callback();
+      };
+      xhr.send(null);
+    }
+  }
+
   constructor(id, terrain, props) {
     this.id = id;
     this.terrain = terrain;
@@ -8,9 +26,6 @@ class Cell {
   }
 
   draw(ctrX, ctrY) {
-    var tilesDrawn = 0;
-    var propsDrawn = 0;
-    var entitiesDrawn = 0;
     let cw = Cell.ctx.width / Zoom;
     let ch = Cell.ctx.height / Zoom;
 
@@ -31,7 +46,6 @@ class Cell {
             for(let x = Math.floor(ctrX / 32); x < Math.min(this.terrain[z][y].length, Math.ceil((ctrX + cw) / 32)); x++) {
               if(Tile.list[this.terrain[z][y][x]]) {
                 Tile.list[this.terrain[z][y][x]].draw(x, y);
-                tilesDrawn++;
               }
             }
           }
@@ -41,19 +55,16 @@ class Cell {
           for(let prop of this.props[z])
             if(isInSight(prop.x * 32, prop.y * 32, Prop.list[prop.id].image.width, Prop.list[prop.id].image.height)) {
               Prop.list[prop.id].draw(prop.x, prop.y);
-              propsDrawn++;
             }
 
         for(let i in this.entities) {
           let entity = this.entities[i];
           if(entity.z === z && isInSight(entity.animX, entity.animY, entity.sprite.width * 32, entity.sprite.height * 32)) {
             entity.draw();
-            entitiesDrawn++;
           }
         }
       }
     }
-    //console.log(tilesDrawn + " tiles, " + propsDrawn + " props, " + entitiesDrawn + " entities");
     Cell.ctx.restore();
   }
 }

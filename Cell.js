@@ -6,7 +6,7 @@ const Container = require("./Container.js");
 class Cell {
   static load(list, callback) {
     for(let cell of list) {
-      let data = JSON.parse(fs.readFileSync("./cells/" + cell + ".json"));
+      let data = JSON.parse(fs.readFileSync("./client/cells/" + cell + ".json"));
       new Cell(cell, data);
       console.log("Loaded cell " + cell);
     }
@@ -69,17 +69,8 @@ class Cell {
     for(let i in this.entities) {
       entities.push(this.entities[i].initPack);
     }
-    let props = [];
-    for(let z in this.props) {
-      props[z] = [];
-      for(let prop of this.props[z]) {
-        props[z].push({id: prop.id, x: prop.x, y: prop.y});
-      }
-    }
     return {
       id: this.id,
-      terrain: this.terrain,
-      props: props,
       entities: entities,
     };
   }

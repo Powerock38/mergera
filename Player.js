@@ -61,6 +61,7 @@ class Player extends Entity {
     });
 
     ws.emit("selfId", ws.id);
+    
     player.inventory.update();
 
     Player.lastplayer = player;
