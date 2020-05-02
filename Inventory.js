@@ -3,7 +3,13 @@ class Inventory {
     this.size = size;
     this.items = items;
     this.id = id;
-    this.owner = owner;
+    if(owner) {
+      this.owner = owner;
+      this.hbslot = 0;
+      owner.ws.on("hotbarslot", (data)=>{
+        this.hbslot = data;
+      });
+    }
   }
 
   get nextSlot() {

@@ -9,16 +9,17 @@ body {
   background-color: black;
   color: white;
   font-family: sans-serif;
+  user-select: none;
 }
 
 img {
-    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated;                 /* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+  image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+  image-rendering: -moz-crisp-edges;          /* Firefox                        */
+  image-rendering: -o-crisp-edges;            /* Opera                          */
+  image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+  image-rendering: pixelated;                 /* Chrome */
+  image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+  -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
 #loading {
@@ -49,7 +50,7 @@ img {
 }
 
 #inventoryAround {
-  display: none;
+  display: flex;
   position: absolute;
   top: 20px;
   left: 20px;
@@ -82,6 +83,10 @@ img {
   border: 1px solid black;
   width: 64px;
   height: 64px;
+}
+
+.selected {
+  background-color: rgba(25, 25, 25, 0.6);
 }
 
 .item img, .item .amount {

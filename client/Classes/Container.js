@@ -15,8 +15,9 @@ class Container {
     hud.container.innerHTML = "";
     for(let i = 0; i < this.size; i++) {
       let item = this.items[i];
+      let elem;
       if(item) {
-        let elem = Item.list[item.id].draw(item.amount);
+        elem = Item.list[item.id].draw(item.amount);
         elem.onclick = ()=>{
           connection.emit("moveToMyInventory", {
             id: item.id,
@@ -24,22 +25,27 @@ class Container {
             //slot: null
           }, "inv:"+this.id);
         }
-        hud.container.appendChild(elem);
       } else {
-        Item.drawEmpty(hud.container);
+        elem = Item.drawEmpty();
       }
+      hud.container.appendChild(elem);
     }
   }
 
   open() {
     this.displayed = true;
+    Container.displayed = true;
     this.draw();
     hud.containerAround.style.display = "flex";
+    Inventory.main.open();
   }
 
   close() {
     this.displayed = false;
+    Container.displayed = false;
     hud.containerAround.style.display = "none";
+    Inventory.main.close();
   }
 }
 Container.list = [];
+Container.displayed = false;

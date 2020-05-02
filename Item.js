@@ -1,22 +1,28 @@
+const Projectile = require("./Projectile.js");
+
 class Item {
   static load(list) {
     for(let item of list) {
-      let {id, ...stats} = item;
-      new Item(item.id, stats);
+      new Item(item);
     }
   }
 
-  constructor(id, stats) {
-    this.id = id;
+  constructor(item) {
+    this.id = item.id;
     this.stats = [];
-    for(let i in stats) this.stats[i] = stats[i];
+    this.use = item.use;
+    this.cooldown = item.cd;
+    for(let i in item.stats) this.stats[i] = item.stats[i];
     Item.list[this.id] = this;
   }
 }
 Item.list = [];
 
 Item.load([
-  {id:"boots", speed: 1},
+  {id:"boots", stats:{speed: 1}},
+  {id:"gun", cd: 1000, use:(player)=>{
+    new Projectile("bullet", player.cell, player.x, player.y, player.z, player.facing);
+  }},
 ]);
 
 module.exports = Item;

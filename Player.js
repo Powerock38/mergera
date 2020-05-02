@@ -28,8 +28,12 @@ class Player extends Entity {
     super(sprite, cell, x, y, z, id);
     this.ws = ws;
     this.pressing = {};
-    this.canUse = true;
     this.viewing = null;
+    this.can = {
+      ...this.can,
+      use: true,
+      useItem: [],
+    };
     this.stats = {
       ...this.stats,
     };
@@ -59,13 +63,25 @@ class Player extends Entity {
     else if(this.pressing.right) this.move(D.right);
 
     if(this.pressing.use) this.use();
+    if(this.pressing.useItem) this.useItem();
+  }
+
+  useItem() {
+    let id = this.inventory.items[this.inventory.hbslot]?.id;
+    if((this.can.useItem[id] === undefined || this.can.useItem[id]) && Item.list[id]) {
+      this.can.useItem[id] = false;
+      setTimeout(()=>{
+        this.can.useItem[id] = true;
+      }, Item.list[id].cooldown);
+      Item.list[id].use?.(this);
+    }
   }
 
   use() {
-    if(this.canUse) {
-      this.canUse = false;
+    if(this.can.use && !this.going) {
+      this.can.use = false;
       setTimeout(()=>{
-        this.canUse = true;
+        this.can.use = true;
       }, 300);
       if(this.viewing) {
         Container.list[this.viewing].close(this);
@@ -82,7 +98,7 @@ class Player extends Entity {
     let changed = super.setCell(cell, x, y, z);
 
     if(changed)
-      SOCKET_LIST[this.id].emit("init", this.cell.initPack);
+      SOCKET_LIST[this.id].emit("initCell", this.cell.initPack);
   }
 
   move(dir) {

@@ -47,7 +47,8 @@ Tile.load([
     console.log("All props loaded !");
     Spritesheet.load([
       "player",
-      "dog"
+      "dog",
+      "bullet",
     ],()=>{
       console.log("All sprites loaded !");
       Item.load([
@@ -122,8 +123,16 @@ function begin() {
         selfId = data;
         break;
 
-      case 'init':
+      case 'initCell':
         cellId = data.id;
+        Cell.list[data.id].entities = [];
+        for(let i in data.entities) {
+          let entity = data.entities[i];
+          Cell.list[data.id].entities[entity.id] = new Entity(entity);
+        }
+        break;
+
+      case 'init':
         for(let i in data.entities) {
           let entity = data.entities[i];
           Cell.list[data.id].entities[entity.id] = new Entity(entity);
@@ -134,11 +143,9 @@ function begin() {
         cellId = data.id;
         for(let entity of data.entities) {
           let ent = Cell.list[data.id].entities[entity.id];
-          if(ent) {
-            for(let p in entity) {
+          if(ent)
+            for(let p in entity)
               ent[p] = entity[p];
-            }
-          }
         }
         update();
         break;
@@ -152,6 +159,8 @@ function begin() {
         Inventory.main.update(data.items, data.size);
         if(Inventory.main.displayed)
           Inventory.main.draw();
+        else
+          Inventory.main.drawHotbar();
         break;
 
       case 'container':
@@ -173,13 +182,16 @@ function begin() {
     }
   }
 
-  function keyboardInput(e, state) {
+  function keyInput(e, state) {
+    if(e.button !== undefined)
+      e.key = e.button;
     for(let key of [
       {key:["z","ArrowUp"], action:"up"},
       {key:["s","ArrowDown"], action:"down"},
       {key:["q","ArrowLeft"], action:"left"},
       {key:["d","ArrowRight"], action:"right"},
-      {key:["e"], action:"use"},
+      {key:["e", 2], action:"use"},
+      {key:[0], action:"useItem"},
     ]) {
       if(key.key.includes(e.key))
         connection.emit("keyPress", {input: key.action, state: state});
@@ -187,11 +199,19 @@ function begin() {
   }
 
   document.addEventListener('keydown', (e) => {
-    keyboardInput(e, true);
+    keyInput(e, true);
   });
 
   document.addEventListener('keyup', (e) => {
-    keyboardInput(e, false);
+    keyInput(e, false);
+  });
+
+  document.addEventListener("mousedown", (e) => {
+    keyInput(e, true);
+  });
+
+  document.addEventListener("mouseup", (e) => {
+    keyInput(e, false);
   });
 
   //client-side controls
@@ -204,6 +224,14 @@ function begin() {
       case 'Enter':
         connection.emit("eval", hud.cmd.value);
         break;
+    }
+  });
+
+  document.addEventListener("wheel", e => {
+    if(e.deltaY < 0) {
+      Inventory.main.previousHBSlot();
+    } else if(e.deltaY > 0) {
+      Inventory.main.nextHBSlot();
     }
   });
 

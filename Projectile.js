@@ -1,33 +1,20 @@
-class Entity {
-  constructor(sprite, cell, x, y, z, id) {
+class Projectile {
+  constructor(sprite, cell, x, y, z, direction, id) {
     this.id = id || uuid();
     this.animX = x * 32;
     this.animY = y * 32;
-    this.facing = D.down;
     this.sprite = sprite;
+    this.facing = direction;
     this.going = null;
-    this.can = {
-      tp: true,
-    };
     this.stats = {
-      speed: 4,
+      speed: 12,
     };
-    this.setCell(cell, x, y, z);
-  }
-
-  setCell(cell, x, y, z) { //override in Player
     this.x = x;
     this.y = y;
     this.z = z;
-    this.animX = this.x * 32;
-    this.animY = this.y * 32;
-    if(this.cell !== cell) { //if changing cell
-      if(this.cell) this.cell.removeEntity(this.id);
-      this.cell = cell;
-      cell.addEntity(this);
-      return true;
-    }
-    return false;
+    this.cell = cell;
+    cell.addEntity(this);
+    this.move(this.facing);
   }
 
   get adjProps() {
@@ -40,19 +27,8 @@ class Entity {
     };
   }
 
-  get belowProps() {
-    return {
-      on:    this.cell.getProp(this.x, this.y, this.z - 1),
-      up:    this.cell.getProp(this.x, this.y - 1, this.z - 1),
-      down:  this.cell.getProp(this.x, this.y + 1, this.z - 1),
-      right: this.cell.getProp(this.x + 1, this.y, this.z - 1),
-      left:  this.cell.getProp(this.x - 1, this.y, this.z - 1)
-    };
-  }
-
   get adjTiles() {
     return {
-      on:    this.cell.terrain[this.z][this.y]?.[this.x],
       up:    this.cell.terrain[this.z][this.y - 1]?.[this.x],
       down:  this.cell.terrain[this.z][this.y + 1]?.[this.x],
       right: this.cell.terrain[this.z][this.y]?.[this.x + 1],
@@ -88,24 +64,6 @@ class Entity {
     }
   }
 
-  updateTP() {
-    for(let tp of this.cell.teleporters) {
-      if(this.facing === tp.facing
-      && this.z >= tp.z1 && this.z <= tp.z2
-      && this.x >= tp.x1 && this.x <= tp.x2
-      && this.y >= tp.y1 && this.y <= tp.y2) {
-        if(this.can.tp) {
-          this.can.tp = false;
-          setTimeout(()=>{
-            this.can.tp = true;
-          }, 500);
-          let cell = require("./Cell.js").list[tp.cell];
-          this.setCell(cell, tp.x, tp.y, tp.z);
-        }
-      }
-    }
-  }
-
   update() { //override in Player
     this.updatePosition();
   }
@@ -120,26 +78,21 @@ class Entity {
     } else if(dir === D.right) {
       this.x++;
     }
-    if(this.belowProps.on?.stairs)
-      this.z--;
     this.animX = this.x * 32;
     this.animY = this.y * 32;
-    this.updateTP();
+    this.move(dir);
   }
 
   canMove(dir) {
     if(this.going) return false;
 
     let onProp = this.adjProps.on;
-    if(onProp?.stairs === dir)
-      return true;
-
     if(onProp?.block?.[onProp.tileNb]?.includes(dir))
       return false;
 
     let can = true;
     let frontProp = this.adjProps[dir];
-    can = Boolean(this.adjTiles[dir]) || this.belowProps[dir]?.stairs;
+    can = Boolean(this.adjTiles[dir]);
     if(frontProp?.block?.[frontProp.tileNb]) {
       let od = {"up":D.down, "down":D.up, "left":D.right, "right":D.left}[dir];
       can = !frontProp.block[frontProp.tileNb].includes(od);
@@ -147,15 +100,16 @@ class Entity {
     return can;
   }
 
-  move(dir) { //override in Player
-    if(this.facing !== dir) {
-      this.facing = dir;
-    } else if(this.canMove(dir)) {
+  move(dir) {
+    if(this.canMove(dir)) {
       this.going = dir;
-      if(this.adjProps.on?.stairs === dir)
-        this.z++;
+    } else {
+      this.remove();
     }
-    this.updateTP();
+  }
+
+  remove() {
+    this.cell.removeEntity(this.id);
   }
 
   //NET CODE
@@ -177,4 +131,4 @@ class Entity {
   }
 }
 
-module.exports = Entity;
+module.exports = Projectile;

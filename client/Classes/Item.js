@@ -35,10 +35,10 @@ class Item {
     return element;
   }
 
-  static drawEmpty(parent) {
+  static drawEmpty() {
     let element = document.createElement("span");
     element.classList.add("item");
-    parent.appendChild(element);
+    return element;
   }
 }
 Item.list = [];
