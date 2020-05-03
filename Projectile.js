@@ -1,9 +1,11 @@
 class Projectile {
-  constructor(sprite, cell, x, y, z, direction, id) {
+  constructor(ownerId, sprite, cell, x, y, z, direction, damage, id) {
     this.id = id || uuid();
+    this.ownerId = ownerId;
     this.animX = x * 32;
     this.animY = y * 32;
     this.sprite = sprite;
+    this.damage = damage;
     this.facing = direction;
     this.going = null;
     this.stats = {
@@ -15,6 +17,16 @@ class Projectile {
     this.cell = cell;
     cell.addEntity(this);
     this.move(this.facing);
+  }
+
+  get adjEntities() {
+    return {
+      on:    this.cell.getEntity(this.x, this.y, this.z),
+      up:    this.cell.getEntity(this.x, this.y - 1, this.z),
+      down:  this.cell.getEntity(this.x, this.y + 1, this.z),
+      right: this.cell.getEntity(this.x + 1, this.y, this.z),
+      left:  this.cell.getEntity(this.x - 1, this.y, this.z)
+    };
   }
 
   get adjProps() {
@@ -64,7 +76,7 @@ class Projectile {
     }
   }
 
-  update() { //override in Player
+  update() {
     this.updatePosition();
   }
 
@@ -83,6 +95,18 @@ class Projectile {
     this.move(dir);
   }
 
+  move(dir) {
+    let entityOn = this.cell.getEntity(this.x, this.y, this.z);
+    if(entityOn && entityOn.hp && entityOn.id !== this.ownerId) {
+      this.remove();
+      entityOn.takeDamage(this.damage);
+    } else if(this.canMove(dir)) {
+      this.going = dir;
+    } else {
+      this.remove();
+    }
+  }
+
   canMove(dir) {
     if(this.going) return false;
 
@@ -98,14 +122,6 @@ class Projectile {
       can = !frontProp.block[frontProp.tileNb].includes(od);
     }
     return can;
-  }
-
-  move(dir) {
-    if(this.canMove(dir)) {
-      this.going = dir;
-    } else {
-      this.remove();
-    }
   }
 
   remove() {

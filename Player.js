@@ -6,7 +6,7 @@ const Item = require("./Item.js");
 
 class Player extends Entity {
   static onConnect(ws) {
-    let player = new Player(ws, ws.id, "player", Cell.list["test"], 7, 7, 0);
+    let player = new Player(ws, ws.id, {sprite:"player", hp:20, speed:4}, Cell.list["test"], 7, 7, 0);
 
     ws.on("keyPress", (data)=>{
       player.pressing[data.input] = data.state;

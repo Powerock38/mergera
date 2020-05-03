@@ -1,17 +1,17 @@
 class Entity {
-  constructor(sprite, cell, x, y, z, id) {
+  constructor(entity, cell, x, y, z, id) {
     this.id = id || uuid();
-    this.animX = x * 32;
-    this.animY = y * 32;
     this.facing = D.down;
-    this.sprite = sprite;
     this.going = null;
     this.can = {
       tp: true,
     };
+    this.sprite = entity.sprite;
     this.stats = {
-      speed: 4,
+      speed: entity.speed,
+      maxHP: entity.hp,
     };
+    this.hp = entity.hp;
     this.setCell(cell, x, y, z);
   }
 
@@ -28,6 +28,16 @@ class Entity {
       return true;
     }
     return false;
+  }
+
+  remove() {
+    this.cell.removeEntity(this.id);
+  }
+
+  takeDamage(damage) {
+    this.hp -= damage;
+    if(this.hp <= 0)
+      this.remove();
   }
 
   get adjProps() {
@@ -58,6 +68,13 @@ class Entity {
       right: this.cell.terrain[this.z][this.y]?.[this.x + 1],
       left:  this.cell.terrain[this.z][this.y]?.[this.x - 1]
     };
+  }
+
+  get frontXY() {
+         if(this.facing === D.up)    return {x: this.x,     y: this.y - 1};
+    else if(this.facing === D.down)  return {x: this.x,     y: this.y + 1};
+    else if(this.facing === D.right) return {x: this.x + 1, y: this.y};
+    else if(this.facing === D.left)  return {x: this.x - 1, y: this.y};
   }
 
   updatePosition() {
@@ -176,5 +193,10 @@ class Entity {
     };
   }
 }
+
+Entity.loadList = {
+  dog: {sprite:"dog", hp:10, speed:6},
+  skeleton: {sprite:"skeleton", hp:20, speed:4},
+};
 
 module.exports = Entity;

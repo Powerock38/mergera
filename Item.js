@@ -20,8 +20,9 @@ Item.list = [];
 
 Item.load([
   {id:"boots", stats:{speed: 1}},
-  {id:"gun", cd: 1000, use:(player)=>{
-    new Projectile("bullet", player.cell, player.x, player.y, player.z, player.facing);
+  {id:"gun", cd: 100, use:(player)=>{
+    let front = player.frontXY;
+    new Projectile(player.id, "bullet", player.cell, front.x, front.y, player.z, player.facing, 10);
   }},
 ]);
 

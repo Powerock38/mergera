@@ -30,20 +30,28 @@ class Cell {
     this.teleporters = data.teleporters;
     this.entities = [];
     for(let entity of data.entities)
-      new Entity(entity.sprite, this, entity.x, entity.y, entity.z);
+      new Entity(Entity.loadList[entity.id], this, entity.x, entity.y, entity.z);
 
     Cell.list[this.id] = this;
   }
 
   getProp(x, y, z) {
     if(this.props[z])
-    for(let prop of this.props[z]) {
-      let propObj = Prop.list[prop.id];
-      if(x >= prop.x && x < prop.x + propObj.width
-      && y >= prop.y && y < prop.y + propObj.height) {
-        let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
-        return {...propObj, tileNb: tileNb, ...prop};
+      for(let prop of this.props[z]) {
+        let propObj = Prop.list[prop.id];
+        if(x >= prop.x && x < prop.x + propObj.width
+        && y >= prop.y && y < prop.y + propObj.height) {
+          let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
+          return {...propObj, tileNb: tileNb, ...prop};
+        }
       }
+  }
+
+  getEntity(x, y, z) {
+    for(let i in this.entities) {
+      let entity = this.entities[i];
+      if(entity.z === z && entity.y === y && entity.x === x)
+        return entity;
     }
   }
 
