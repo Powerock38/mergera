@@ -29,6 +29,7 @@ class Player extends Entity {
     this.ws = ws;
     this.pressing = {};
     this.viewing = null;
+    this.swinging = [];
     this.can = {
       ...this.can,
       use: true,
@@ -38,7 +39,7 @@ class Player extends Entity {
       ...this.stats,
     };
     this.ogstats = {...this.stats};
-    this.inventory = new Inventory(30, [{id:"gun",amount:1}], this.id, this);
+    this.inventory = new Inventory(30, [{id:"sword",amount:1}], this.id, this);
     Player.list[this.id] = this;
   }
 
@@ -73,6 +74,12 @@ class Player extends Entity {
       setTimeout(()=>{
         this.can.useItem[id] = true;
       }, Item.list[id].cooldown);
+      if(Item.list[id].swingTime) {
+        this.swinging = [id, Item.list[id].swingTime];
+          setTimeout(()=>{
+            this.swinging = [];
+          }, this.swinging[1]);
+      }
       Item.list[id].use?.(this);
     }
   }

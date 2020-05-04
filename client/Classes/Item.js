@@ -35,6 +35,14 @@ class Item {
     return element;
   }
 
+  drawSwing(angle, x, y) {
+    Cell.ctx.translate(x, y);
+    Cell.ctx.rotate(angle);
+    Cell.ctx.drawImage(this.image, -this.image.width, -this.image.height);
+    Cell.ctx.rotate(-angle);
+    Cell.ctx.translate(-x, -y);
+  }
+
   static drawEmpty() {
     let element = document.createElement("span");
     element.classList.add("item");

@@ -40,6 +40,11 @@ class Entity {
       this.remove();
   }
 
+  attack(damage) {
+    let front = this.frontXY;
+    this.cell.getEntity(front.x, front.y, this.z)?.takeDamage(damage);
+  }
+
   get adjProps() {
     return {
       on:    this.cell.getProp(this.x, this.y, this.z),
@@ -190,6 +195,7 @@ class Entity {
       z: this.z,
       going: this.going,
       facing: this.facing,
+      swinging: this.swinging,
     };
   }
 }
