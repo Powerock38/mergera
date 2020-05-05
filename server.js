@@ -81,6 +81,11 @@ wss.on("connection", (ws)=>{
   }
 });
 
+TIMEOUTS = [];
+timeout = (cb, time)=>{
+  TIMEOUTS.push({cb: cb, time: time});
+}
+
 function packIsNotEmpty(pack) {
   let empty = true;
   for(let i in pack) {
@@ -97,6 +102,18 @@ console.log("Server started");
 var MAINLOOP;
 function begin() {
   MAINLOOP = setInterval(() => {
+    for(let i in TIMEOUTS) {
+      let to = TIMEOUTS[i];
+      to.time--;
+      if(to.time <= 0) {
+        to.cb();
+        delete TIMEOUTS[i];
+        let lastInd = TIMEOUTS.length;
+        while(lastInd-- && TIMEOUTS[lastInd] == null);
+        TIMEOUTS.length = lastInd + 1;
+      }
+    }
+
     for(let i in Cell.list) {
       Cell.list[i].update();
     }

@@ -29,7 +29,7 @@ class Player extends Entity {
     this.ws = ws;
     this.pressing = {};
     this.viewing = null;
-    this.swinging = [];
+    this.swinging = {id:null, tick:0};
     this.can = {
       ...this.can,
       use: true,
@@ -69,17 +69,22 @@ class Player extends Entity {
 
   useItem() {
     let id = this.inventory.items[this.inventory.hbslot]?.id;
+
     if((this.can.useItem[id] === undefined || this.can.useItem[id]) && Item.list[id]) {
       this.can.useItem[id] = false;
-      setTimeout(()=>{
+      timeout(()=>{
         this.can.useItem[id] = true;
-      }, Item.list[id].cooldown);
-      if(Item.list[id].swingTime) {
-        this.swinging = [id, Item.list[id].swingTime];
-          setTimeout(()=>{
-            this.swinging = [];
-          }, this.swinging[1]);
+      }, Item.list[id].cd);
+
+      if(Item.list[id].swing) {
+        this.swinging.id = id;
+        this.swinging.tick = Item.list[id].swing;
+        timeout(()=>{
+          this.swinging.id = null;
+          this.swinging.tick = 0;
+        }, Item.list[id].swing);
       }
+
       Item.list[id].use?.(this);
     }
   }
@@ -87,9 +92,9 @@ class Player extends Entity {
   use() {
     if(this.can.use && !this.going) {
       this.can.use = false;
-      setTimeout(()=>{
+      timeout(()=>{
         this.can.use = true;
-      }, 300);
+      }, 10);
       if(this.viewing) {
         Container.list[this.viewing].close(this);
         return;
