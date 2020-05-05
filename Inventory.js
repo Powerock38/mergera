@@ -41,6 +41,7 @@ class Inventory {
   }
 
   addItem(id, amount) { // false = incremented amount; true = made a new item
+    amount = amount || 1;
     for(let i in this.items) {
       if(this.items[i]?.id === id) {
         this.items[i].amount += amount;
@@ -58,6 +59,7 @@ class Inventory {
   }
 
   removeItem(id, amount) { // false = failed; true = all good
+    amount = amount || 1;
     for(let i in this.items) {
       if(this.items[i]?.id === id) {
         if(this.items[i].amount < amount)
@@ -76,6 +78,7 @@ class Inventory {
   }
 
   hasItem(id, amount) {
+    amount = amount || 1;
     for(let i in this.items) {
       if(this.items[i]?.id === id) {
         return this.items[i].amount >= amount;

@@ -39,7 +39,7 @@ class Player extends Entity {
       ...this.stats,
     };
     this.ogstats = {...this.stats};
-    this.inventory = new Inventory(30, [{id:"sword",amount:1}], this.id, this);
+    this.inventory = new Inventory(30, [{id:"sword",amount:1},{id:"gun",amount:1}], this.id, this);
     Player.list[this.id] = this;
   }
 
@@ -70,7 +70,7 @@ class Player extends Entity {
   useItem() {
     let id = this.inventory.items[this.inventory.hbslot]?.id;
 
-    if((this.can.useItem[id] === undefined || this.can.useItem[id]) && Item.list[id]) {
+    if((this.can.useItem[id] === undefined || this.can.useItem[id]) && Item.list[id] && !this.viewing) {
       this.can.useItem[id] = false;
       timeout(()=>{
         this.can.useItem[id] = true;

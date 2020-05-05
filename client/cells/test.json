@@ -66,6 +66,7 @@
         "items": [
           {"id": "hat", "amount": 2},
           {"id": "gun", "amount": 1},
+          {"id": "ammo", "amount": 10},
           {"id": "boots", "amount": 1},
           {"id": "sword", "amount": 1}
         ]

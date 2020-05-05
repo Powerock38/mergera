@@ -54,6 +54,7 @@ Tile.load([
       Item.load([
         {id:"hat", name:"Hat", desc:"A weird hat, but a hat nonetheless"},
         {id:"gun", name:"Gun", desc:"Gotta do da job 😤"},
+        {id:"ammo", name:"Ammo", desc:""},
         {id:"boots", name:"Boots", desc:"Good ol' leather boots"},
         {id:"sword", name:"Sword", desc:"Your average sharpy sword"},
       ],()=>{
@@ -191,7 +192,7 @@ function begin() {
       {key:["s","ArrowDown"], action:"down"},
       {key:["q","ArrowLeft"], action:"left"},
       {key:["d","ArrowRight"], action:"right"},
-      {key:["e", 2], action:"use"},
+      {key:[2], action:"use"},
       {key:[0], action:"useItem"},
     ]) {
       if(key.key.includes(e.key))
@@ -218,7 +219,7 @@ function begin() {
   //client-side controls
   document.addEventListener('keypress', (e) => {
     switch(e.key) {
-      case 'a':
+      case 'e':
         Inventory.main.toggle();
         break;
 
