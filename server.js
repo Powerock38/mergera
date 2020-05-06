@@ -13,7 +13,7 @@ const WebSocketServer = require("ws").Server;
 const WebSocketServerWrapper = require("ws-server-wrapper");
 const wss = new WebSocketServerWrapper(new WebSocketServer({ server }));
 
-SOCKET_LIST = [];
+SOCKET_LIST = new Map();
 DEBUG = true;
 
 D = {up: "up", down: "down", left: "left", right: "right"};
@@ -52,13 +52,13 @@ Prop.load([
 
 wss.on("connection", (ws)=>{
   ws.id = uuid();
-  SOCKET_LIST[ws.id] = ws;
+  SOCKET_LIST.set(ws.id, ws);
   console.log("socket connection " + ws.id);
   Player.onConnect(ws);
 
   ws.on("close",()=>{
     Player.onDisconnect(ws);
-    delete SOCKET_LIST[ws.id];
+    SOCKET_LIST.delete(ws.id);
     console.log("socket deconnection " + ws.id);
   });
 
@@ -114,13 +114,11 @@ function begin() {
       }
     }
 
-    for(let i in Cell.list) {
-      Cell.list[i].update();
+    for(const cell of Cell.list.values()) {
+      cell.update();
     }
 
-    for(let i in Player.list) {
-      let player = Player.list[i];
-
+    for(const player of Player.list.values()) {
       if(packIsNotEmpty(player.cell.nextInitPack))
         player.ws.emit("init", player.cell.nextInitPack);
 
@@ -130,8 +128,8 @@ function begin() {
       player.ws.emit("update", player.cell.updatePack);
     }
 
-    for(let i in Cell.list) {
-      Cell.list[i].resetPacks();
+    for(const cell of Cell.list.values()) {
+      cell.resetPacks();
     }
 
   }, 1000 / 30);

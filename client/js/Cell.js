@@ -21,8 +21,8 @@ class Cell {
     this.id = id;
     this.terrain = terrain;
     this.props = props;
-    this.entities = [];
-    Cell.list[this.id] = this;
+    this.entities = new Map();
+    Cell.list.set(this.id, this);
   }
 
   draw(ctrX, ctrY) {
@@ -44,21 +44,22 @@ class Cell {
         for(let y = Math.floor(ctrY / 32); y < Math.min(this.terrain[z].length, Math.ceil((ctrY + ch) / 32)); y++) {
           if(this.terrain[z][y]) {
             for(let x = Math.floor(ctrX / 32); x < Math.min(this.terrain[z][y].length, Math.ceil((ctrX + cw) / 32)); x++) {
-              if(Tile.list[this.terrain[z][y][x]]) {
-                Tile.list[this.terrain[z][y][x]].draw(x, y);
+              if(Tile.list.has(this.terrain[z][y][x])) {
+                Tile.list.get(this.terrain[z][y][x]).draw(x, y);
               }
             }
           }
         }
 
         if(this.props[z])
-          for(let prop of this.props[z])
-            if(isInSight(prop.x * 32, prop.y * 32, Prop.list[prop.id].image.width, Prop.list[prop.id].image.height)) {
-              Prop.list[prop.id].draw(prop.x, prop.y);
+          for(let prop of this.props[z]) {
+            const propObj = Prop.list.get(prop.id);
+            if(isInSight(prop.x * 32, prop.y * 32, propObj.image.width, propObj.image.height)) {
+              propObj.draw(prop.x, prop.y);
             }
+          }
 
-        for(let i in this.entities) {
-          let entity = this.entities[i];
+        for(let entity of this.entities.values()) {
           if(entity.z === z && isInSight(entity.animX, entity.animY, entity.sprite.width * 32, entity.sprite.height * 32)) {
             entity.draw();
           }
@@ -68,4 +69,4 @@ class Cell {
     Cell.ctx.restore();
   }
 }
-Cell.list = [];
+Cell.list = new Map();

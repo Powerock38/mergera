@@ -15,11 +15,11 @@ class Prop {
   constructor(image, id) {
     this.image = image;
     this.id = id;
-    Prop.list[this.id] = this;
+    Prop.list.set(this.id, this);
   }
 
   draw(x, y) {
     Cell.ctx.drawImage(this.image, x * 32, y * 32);
   }
 }
-Prop.list = [];
+Prop.list = new Map();

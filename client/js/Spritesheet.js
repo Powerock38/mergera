@@ -17,7 +17,7 @@ class Spritesheet {
     this.id = id;
     this.width = this.image.naturalWidth / 32;
     this.height = this.image.naturalHeight / 32;
-    Spritesheet.list[this.id] = this;
+    Spritesheet.list.set(this.id, this);
   }
 
   drawFrame(frame, x, y) {
@@ -34,7 +34,7 @@ class Spritesheet {
     return Spritesheet.frames[dir][1];
   }
 }
-Spritesheet.list = [];
+Spritesheet.list = new Map();
 Spritesheet.frames = {
   up: [10, 11, 12],
   down: [1, 2, 3],

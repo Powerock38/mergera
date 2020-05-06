@@ -6,7 +6,7 @@ const Item = require("./Item.js");
 
 class Player extends Entity {
   static onConnect(ws) {
-    let player = new Player(ws, ws.id, {sprite:"player", hp:20, speed:4}, Cell.list["test"], 7, 7, 0);
+    let player = new Player(ws, ws.id, {sprite:"player", hp:20, speed:4}, Cell.list.get("test"), 7, 7, 0);
 
     ws.on("keyPress", (data)=>{
       player.pressing[data.input] = data.state;
@@ -20,8 +20,8 @@ class Player extends Entity {
   }
 
   static onDisconnect(ws) {
-    Player.list[ws.id].cell.removeEntity(ws.id);
-    delete Player.list[ws.id];
+    Player.list.get(ws.id).cell.removeEntity(ws.id);
+    Player.list.delete(ws.id);
   }
 
   constructor(ws, id, sprite, cell, x, y, z) {
@@ -40,19 +40,20 @@ class Player extends Entity {
     };
     this.ogstats = {...this.stats};
     this.inventory = new Inventory(30, [{id:"sword",amount:1},{id:"gun",amount:1}], this.id, this);
-    Player.list[this.id] = this;
+    Player.list.set(this.id, this);
   }
 
   updateStats() {
-    let stats = {...this.ogstats};
-    for(let i in this.inventory.items) {
-      let item = this.inventory.items[i];
-      if(item && Item.list[item.id]) {
-        for(let stat in Item.list[item.id].stats) {
-          stats[stat] += Item.list[item.id].stats[stat];
+    const stats = {...this.ogstats};
+
+    for(const item of this.inventory.items) {
+      if(item && Item.list.has(item.id)) {
+        for(const stat in Item.list.get(item.id).stats) {
+          stats[stat] += Item.list.get(item.id).stats[stat];
         }
       }
     }
+
     this.stats = stats;
   }
 
@@ -68,24 +69,26 @@ class Player extends Entity {
   }
 
   useItem() {
-    let id = this.inventory.items[this.inventory.hbslot]?.id;
+    const id = this.inventory.items[this.inventory.hbslot]?.id;
 
-    if((this.can.useItem[id] === undefined || this.can.useItem[id]) && Item.list[id] && !this.viewing) {
+    if((this.can.useItem[id] === undefined || this.can.useItem[id]) && Item.list.has(id) && !this.viewing) {
+      const item = Item.list.get(id);
+
       this.can.useItem[id] = false;
       timeout(()=>{
         this.can.useItem[id] = true;
-      }, Item.list[id].cd);
+      }, item.cd);
 
-      if(Item.list[id].swing) {
+      if(item.swing) {
         this.swinging.id = id;
-        this.swinging.tick = Item.list[id].swing;
+        this.swinging.tick = item.swing;
         timeout(()=>{
           this.swinging.id = null;
           this.swinging.tick = 0;
-        }, Item.list[id].swing);
+        }, item.swing);
       }
 
-      Item.list[id].use?.(this);
+      item.use?.(this);
     }
   }
 
@@ -96,7 +99,7 @@ class Player extends Entity {
         this.can.use = true;
       }, 10);
       if(this.viewing) {
-        Container.list[this.viewing].close(this);
+        Container.list.get(this.viewing).close(this);
         return;
       }
       let frontProp = this.adjProps[this.facing];
@@ -110,16 +113,16 @@ class Player extends Entity {
     let changed = super.setCell(cell, x, y, z);
 
     if(changed)
-      SOCKET_LIST[this.id].emit("initCell", this.cell.initPack);
+      SOCKET_LIST.get(this.id).emit("initCell", this.cell.initPack);
   }
 
   move(dir) {
     super.move(dir);
     if(this.viewing)
-      Container.list[this.viewing].close(this);
+      Container.list.get(this.viewing).close(this);
   }
 }
-Player.list = [];
+Player.list = new Map();
 Player.lastplayer;
 
 module.exports = Player;

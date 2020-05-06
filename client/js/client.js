@@ -49,6 +49,7 @@ Tile.load([
       "player",
       "dog",
       "bullet",
+      "aquaneko",
     ],()=>{
       console.log("All sprites loaded !");
       Item.load([
@@ -57,6 +58,7 @@ Tile.load([
         {id:"ammo", name:"Ammo", desc:""},
         {id:"boots", name:"Boots", desc:"Good ol' leather boots"},
         {id:"sword", name:"Sword", desc:"Your average sharpy sword"},
+        {id:"neko-egg", name:"Neko egg", desc:"An egg containing a cute creature"},
       ],()=>{
         console.log("All items loaded !");
         Cell.load([
@@ -102,8 +104,8 @@ var selfId;
 var cellId;
 
 function begin() {
-  //listener
   connection = new WebSocket('ws://localhost:2000');
+
   //custom function
   connection.emit = (ev, data, channel)=>{
     let obj;
@@ -111,6 +113,7 @@ function begin() {
     else obj = {a: [ev, data]};
     connection.send(JSON.stringify(obj));
   }
+
   connection.onmessage = (message)=>{
     let msg = JSON.parse(message.data);
     let ev = msg.a[0];
@@ -127,24 +130,22 @@ function begin() {
 
       case 'initCell':
         cellId = data.id;
-        Cell.list[data.id].entities = [];
-        for(let i in data.entities) {
-          let entity = data.entities[i];
-          Cell.list[data.id].entities[entity.id] = new Entity(entity);
+        Cell.list.get(data.id).entities.clear();
+        for(let entity of data.entities) {
+          Cell.list.get(data.id).entities.set(entity.id, new Entity(entity));
         }
         break;
 
       case 'init':
-        for(let i in data.entities) {
-          let entity = data.entities[i];
-          Cell.list[data.id].entities[entity.id] = new Entity(entity);
+        for(let entity of data.entities) {
+          Cell.list.get(data.id).entities.set(entity.id, new Entity(entity));
         }
         break;
 
       case 'update':
         cellId = data.id;
         for(let entity of data.entities) {
-          let ent = Cell.list[data.id].entities[entity.id];
+          let ent = Cell.list.get(data.id).entities.get(entity.id);
           if(ent)
             for(let p in entity)
               ent[p] = entity[p];
@@ -154,7 +155,7 @@ function begin() {
 
       case 'remove':
         for(let id of data.entities)
-          delete Cell.list[data.id].entities[id];
+          Cell.list.get(data.id).entities.delete(id);
         break;
 
       case 'inventory':
@@ -166,17 +167,19 @@ function begin() {
         break;
 
       case 'container':
-        if(Container.list[data.id])
-          Container.list[data.id].update(data.items, data.size);
+        if(Container.list.has(data.id))
+          Container.list.get(data.id).update(data.items, data.size);
         else new Container(data.id, data.items, data.size);
 
-        if(data.open === true)
-          Container.list[data.id].open();
-        else if(data.open === false)
-          Container.list[data.id].close();
+        const container = Container.list.get(data.id);
 
-        if(Container.list[data.id].displayed)
-          Container.list[data.id].draw();
+        if(data.open === true)
+          container.open();
+        else if(data.open === false)
+          container.close();
+
+        if(container.displayed)
+          container.draw();
         break;
 
       default:
@@ -192,7 +195,7 @@ function begin() {
       {key:["s","ArrowDown"], action:"down"},
       {key:["q","ArrowLeft"], action:"left"},
       {key:["d","ArrowRight"], action:"right"},
-      {key:[2], action:"use"},
+      {key:[2, "e"], action:"use"},
       {key:[0], action:"useItem"},
     ]) {
       if(key.key.includes(e.key))
@@ -238,12 +241,12 @@ function begin() {
   });
 
   function update() {
-    Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
     if(cellId && selfId) {
-      let Player = Cell.list[cellId].entities[selfId];
-      let ctrX = Math.round(Player.animX - Cell.ctx.width / (2 * Zoom));
-      let ctrY = Math.round(Player.animY - Cell.ctx.height / (2 * Zoom));
-      Cell.list[cellId].draw(ctrX, ctrY);
+      Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
+      const Player = Cell.list.get(cellId).entities.get(selfId);
+      const ctrX = Math.round(Player.animX - Cell.ctx.width / (2 * Zoom));
+      const ctrY = Math.round(Player.animY - Cell.ctx.height / (2 * Zoom));
+      Cell.list.get(cellId).draw(ctrX, ctrY);
       hud.coos.textContent = "("+Math.floor(Player.animX / 32)+";"+Math.floor(Player.animY / 32)+";"+Player.z+")";
     }
   }

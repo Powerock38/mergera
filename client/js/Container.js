@@ -3,7 +3,7 @@ class Container {
     this.id = id;
     this.update(items, size);
     this.displayed = false;
-    Container.list[this.id] = this;
+    Container.list.set(this.id, this);
   }
 
   update(items, size) {
@@ -17,7 +17,7 @@ class Container {
       let item = this.items[i];
       let elem;
       if(item) {
-        elem = Item.list[item.id].draw(item.amount);
+        elem = Item.list.get(item.id).draw(item.amount);
         elem.onclick = ()=>{
           connection.emit("moveToMyInventory", {
             id: item.id,
@@ -47,5 +47,5 @@ class Container {
     Inventory.main.close();
   }
 }
-Container.list = [];
+Container.list = new Map();
 Container.displayed = false;

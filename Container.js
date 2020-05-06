@@ -3,7 +3,7 @@ const Inventory = require("./Inventory.js");
 class Container extends Inventory {
   constructor(size, items, id) {
     super(size, items, id, null);
-    Container.list[this.id] = this;
+    Container.list.set(this.id, this);
   }
 
   send(ws, open) { // open = true => this inventory will open on the client
@@ -34,18 +34,17 @@ class Container extends Inventory {
   }
 
   update(open) {
-    let playerlist = require("./Player.js").list;
+    const playerlist = require("./Player.js").list;
     let viewers = [];
-    for(let i in playerlist) {
-      let player = playerlist[i];
+    for(const player of playerlist.values()) {
       if(player.viewing === this.id)
         viewers.push(player);
     }
 
-    for(let viewer of viewers)
+    for(const viewer of viewers)
       this.send(viewer.ws, null);
   }
 }
-Container.list = [];
+Container.list = new Map();
 
 module.exports = Container;

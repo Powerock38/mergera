@@ -29,8 +29,8 @@ class Inventory {
     for(let i = 0; i < this.size; i++) {
       let item = this.items[i];
       let elem;
-      if(item && Item.list[item.id]) {
-        elem = Item.list[item.id].draw(item.amount);
+      if(item && Item.list.has(item.id)) {
+        elem = Item.list.get(item.id).draw(item.amount);
         elem.onclick = ()=>{
           connection.emit("moveToContainer", {
             id: item.id,
@@ -41,6 +41,9 @@ class Inventory {
       } else {
         elem = Item.drawEmpty();
       }
+      if(i === this.hbslot) {
+        elem.classList.add("selected");
+      }
       hud.inventory.appendChild(elem);
     }
   }
@@ -50,8 +53,8 @@ class Inventory {
     for(let i = 0; i < this.hbsize; i++) {
       let item = this.items[i];
       let elem;
-      if(item && Item.list[item.id]) {
-        elem = Item.list[item.id].draw(item.amount);
+      if(item && Item.list.get(item.id)) {
+        elem = Item.list.get(item.id).draw(item.amount);
       } else {
         elem = Item.drawEmpty();
       }
@@ -82,13 +85,11 @@ class Inventory {
   open() {
     this.displayed = true;
     this.draw();
-    //hud.inventoryAround.style.display = "flex";
   }
 
   close() {
     this.displayed = false;
     this.drawHotbar()
-    //hud.inventoryAround.style.display = "none";
   }
 }
 Inventory.main;

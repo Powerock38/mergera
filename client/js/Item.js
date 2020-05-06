@@ -15,7 +15,7 @@ class Item {
   constructor(image, item) {
     this.image = image;
     for(let i in item) this[i] = item[i];
-    Item.list[this.id] = this;
+    Item.list.set(this.id, this);
   }
 
   draw(amount) {
@@ -49,4 +49,4 @@ class Item {
     return element;
   }
 }
-Item.list = [];
+Item.list = new Map();

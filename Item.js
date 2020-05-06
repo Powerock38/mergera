@@ -1,4 +1,5 @@
 const Projectile = require("./Projectile.js");
+const Entity = require("./Entity.js");
 
 class Item {
   static load(list) {
@@ -9,13 +10,13 @@ class Item {
 
   constructor(item) {
     for(let i in item) this[i] = item[i];
-    Item.list[this.id] = this;
+    Item.list.set(this.id, this);
   }
 }
-Item.list = [];
+Item.list = new Map();
 
 Item.load([
-  {id:"boots", stats:{speed: 1}},
+  {id:"boots", stats:{speed: 4}},
   {id:"gun", swing: 5, cd: 9, use:(player)=>{
     if(player.inventory.removeItem("ammo")) {
       let front = player.frontXY;
@@ -24,6 +25,10 @@ Item.load([
   }},
   {id:"sword", swing: 5, cd: 15, use:(player)=>{
     player.attack(10);
+  }},
+  {id:"neko-egg", cd: 30, use:(player)=>{
+    if(player.inventory.removeItem("neko-egg"))
+      new Entity(Entity.loadList["aquaneko"], player.cell, player.x, player.y, player.z);
   }},
 ]);
 

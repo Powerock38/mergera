@@ -6,7 +6,7 @@ class Entity {
     this.going = pack.going;
     this.facing = pack.facing;
     this.swinging = pack.swinging;
-    this.sprite = Spritesheet.list[pack.sprite];
+    this.sprite = Spritesheet.list.get(pack.sprite);
     this.frame;
     this.frameTick = 0;
     this.swingAngle = 0;
@@ -20,9 +20,9 @@ class Entity {
         this.frameTick = 0;
     } else this.frame = this.sprite.stillFrame(this.facing);
 
-    if(this.swinging && this.swinging.id !== null && Item.list[this.swinging.id]) {
+    if(this.swinging && this.swinging.id !== null && Item.list.has(this.swinging.id)) {
       let angle = this.swingAngle + Entity.dirToInt[this.facing] * (Math.PI / 2);
-      Item.list[this.swinging.id].drawSwing(angle, this.animX + 16, this.animY + 16);
+      Item.list.get(this.swinging.id).drawSwing(angle, this.animX + 16, this.animY + 16);
       this.swingAngle += (Math.PI/2) / this.swinging.tick;
     } else this.swingAngle = 0;
 

@@ -16,9 +16,9 @@ class Prop {
     for(let p in param) this[p] = param[p];
     this.width = width / 32;
     this.height = height / 32;
-    Prop.list[this.id] = this;
+    Prop.list.set(this.id, this);
   }
 }
-Prop.list = {};
+Prop.list = new Map();
 
 module.exports = Prop;

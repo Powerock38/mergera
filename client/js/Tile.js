@@ -21,7 +21,7 @@ class Tile {
   constructor(image, id) {
     this.image = image;
     this.id = id;
-    Tile.list[this.id] = this;
+    Tile.list.set(this.id, this);
   }
 
   draw(x, y) {
@@ -29,4 +29,4 @@ class Tile {
       Cell.ctx.drawImage(this.image, x * 32, y * 32, 32, 32);
   }
 }
-Tile.list = {};
+Tile.list = new Map();

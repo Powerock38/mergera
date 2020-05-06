@@ -121,7 +121,7 @@ class Entity {
           setTimeout(()=>{
             this.can.tp = true;
           }, 500);
-          let cell = require("./Cell.js").list[tp.cell];
+          let cell = require("./Cell.js").list.get(tp.cell);
           this.setCell(cell, tp.x, tp.y, tp.z);
         }
       }
@@ -202,6 +202,7 @@ class Entity {
 
 Entity.loadList = {
   dog: {sprite:"dog", hp:10, speed:6},
+  aquaneko: {sprite:"aquaneko", hp:20, speed:6},
   skeleton: {sprite:"skeleton", hp:20, speed:4},
 };
 

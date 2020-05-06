@@ -1,7 +1,7 @@
 class Inventory {
   constructor(size, items, id, owner) {
     this.size = size;
-    this.items = items;
+    this.items = items || [];
     this.id = id;
     if(owner) {
       this.owner = owner;

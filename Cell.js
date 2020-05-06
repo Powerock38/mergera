@@ -22,23 +22,23 @@ class Cell {
     for(let z in this.props) {
       for(let prop of this.props[z]) {
         if(prop.chest) {
-          let id = this.id + "-" + prop.id + "-" + prop.x + "-" + prop.y + "-" + z;
+          const id = this.id + "-" + prop.id + "-" + prop.x + "-" + prop.y + "-" + z;
           prop.container = new Container(prop.chest.size, prop.chest.items, id);
         }
       }
     }
     this.teleporters = data.teleporters;
-    this.entities = [];
-    for(let entity of data.entities)
+    this.entities = new Map();
+    for(const entity of data.entities)
       new Entity(Entity.loadList[entity.id], this, entity.x, entity.y, entity.z);
 
-    Cell.list[this.id] = this;
+    Cell.list.set(this.id, this);
   }
 
   getProp(x, y, z) {
     if(this.props[z])
       for(let prop of this.props[z]) {
-        let propObj = Prop.list[prop.id];
+        let propObj = Prop.list.get(prop.id);
         if(x >= prop.x && x < prop.x + propObj.width
         && y >= prop.y && y < prop.y + propObj.height) {
           let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
@@ -48,34 +48,33 @@ class Cell {
   }
 
   getEntity(x, y, z) {
-    for(let i in this.entities) {
-      let entity = this.entities[i];
+    for(const entity of this.entities.values()) {
       if(entity.z === z && entity.y === y && entity.x === x)
         return entity;
     }
   }
 
   addEntity(entity) {
-    this.entities[entity.id] = entity;
+    this.entities.set(entity.id, entity);
     this.nextInitPack.entities.push(entity.initPack);
   }
 
   removeEntity(id) {
-    delete this.entities[id];
+    this.entities.delete(id);
     this.nextRemovePack.entities.push(id);
   }
 
   update() {
-    for(let i in this.entities) {
-      this.entities[i].update();
+    for(const entity of this.entities.values()) {
+      entity.update();
     }
   }
 
   //NET CODE
   get initPack() {
     let entities = [];
-    for(let i in this.entities) {
-      entities.push(this.entities[i].initPack);
+    for(const entity of this.entities.values()) {
+      entities.push(entity.initPack);
     }
     return {
       id: this.id,
@@ -85,8 +84,8 @@ class Cell {
 
   get updatePack() {
     let entities = [];
-    for(let i in this.entities) {
-      entities.push(this.entities[i].updatePack);
+    for(const entity of this.entities.values()) {
+      entities.push(entity.updatePack);
     }
     return {
       id: this.id,
@@ -99,6 +98,6 @@ class Cell {
     this.nextRemovePack = {id: this.id, entities:[]};
   }
 }
-Cell.list = [];
+Cell.list = new Map();
 
 module.exports = Cell;
