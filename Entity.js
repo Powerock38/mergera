@@ -42,7 +42,7 @@ class Entity {
 
   attack(damage) {
     let front = this.frontXY;
-    this.cell.getEntity(front.x, front.y, this.z)?.takeDamage(damage);
+    this.cell.getEntity(front.x, front.y, this.z)?.takeDamage?.(damage);
   }
 
   get adjProps() {
