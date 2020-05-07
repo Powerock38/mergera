@@ -20,7 +20,7 @@ class Entity {
         this.frameTick = 0;
     } else this.frame = this.sprite.stillFrame(this.facing);
 
-    if(this.swinging && this.swinging.id !== null && Item.list.has(this.swinging.id)) {
+    if(this.swinging && Item.list.has(this.swinging.id)) {
       let angle = this.swingAngle + Entity.dirToInt[this.facing] * (Math.PI / 2);
       Item.list.get(this.swinging.id).drawSwing(angle, this.animX + 16, this.animY + 16);
       this.swingAngle += (Math.PI/2) / this.swinging.tick;

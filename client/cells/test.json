@@ -1,5 +1,5 @@
 {
-  "defaultLevel": 0,
+  "sky": true,
   "terrain": [
     [
       ["tile001", "tile001", "tile001", "tile001", "tile001", "tile001", "tile008", "tile009", "tile010", "tile001", "tile001", "tile001", "tile001", "tile001", "tile001"],

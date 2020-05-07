@@ -86,20 +86,21 @@ for(let hudElem of [
   "cmd",
 ]) hud[hudElem] = document.getElementById(hudElem);
 
+var Zoom = 2;
 hud.mainframe.width = document.documentElement.clientWidth;
 hud.mainframe.height = document.documentElement.clientHeight;
-Cell.ctx = hud.mainframe.getContext("2d");
+CTX = hud.mainframe.getContext("2d");
 refreshWindowSize = ()=>{
   hud.mainframe.width = document.documentElement.clientWidth;
   hud.mainframe.height = document.documentElement.clientHeight;
-  Cell.ctx.width = hud.mainframe.width;
-  Cell.ctx.height = hud.mainframe.height;
-  Cell.ctx.imageSmoothingEnabled = false;
+  CTX.width = hud.mainframe.width;
+  CTX.height = hud.mainframe.height;
+  CTX.imageSmoothingEnabled = false;
+  CTX.scale(Zoom, Zoom);
 };
 refreshWindowSize();
 window.addEventListener('resize', refreshWindowSize);
 
-var Zoom = 2;
 var selfId;
 var cellId;
 
@@ -242,10 +243,10 @@ function begin() {
 
   function update() {
     if(cellId && selfId) {
-      Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
+      CTX.clearRect(0, 0, CTX.width, CTX.height);
       const Player = Cell.list.get(cellId).entities.get(selfId);
-      const ctrX = Math.round(Player.animX - Cell.ctx.width / (2 * Zoom));
-      const ctrY = Math.round(Player.animY - Cell.ctx.height / (2 * Zoom));
+      const ctrX = Math.round(Player.animX - CTX.width / (2 * Zoom));
+      const ctrY = Math.round(Player.animY - CTX.height / (2 * Zoom));
       Cell.list.get(cellId).draw(ctrX, ctrY);
       hud.coos.textContent = "("+Math.floor(Player.animX / 32)+";"+Math.floor(Player.animY / 32)+";"+Player.z+")";
     }

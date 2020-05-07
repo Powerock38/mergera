@@ -16,7 +16,6 @@ class Cell {
   constructor(id, data) {
     this.id = id;
     this.resetPacks();
-    this.defaultLevel = data.defaultLevel;
     this.terrain = data.terrain;
     this.props = data.props;
     for(let z in this.props) {

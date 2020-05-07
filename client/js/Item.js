@@ -36,11 +36,11 @@ class Item {
   }
 
   drawSwing(angle, x, y) {
-    Cell.ctx.translate(x, y);
-    Cell.ctx.rotate(angle);
-    Cell.ctx.drawImage(this.image, -this.image.width, -this.image.height);
-    Cell.ctx.rotate(-angle);
-    Cell.ctx.translate(-x, -y);
+    CTX.translate(x, y);
+    CTX.rotate(angle);
+    CTX.drawImage(this.image, -this.image.width, -this.image.height);
+    CTX.rotate(-angle);
+    CTX.translate(-x, -y);
   }
 
   static drawEmpty() {

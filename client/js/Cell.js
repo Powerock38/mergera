@@ -26,8 +26,8 @@ class Cell {
   }
 
   draw(ctrX, ctrY) {
-    let cw = Cell.ctx.width / Zoom;
-    let ch = Cell.ctx.height / Zoom;
+    let cw = CTX.width / Zoom;
+    let ch = CTX.height / Zoom;
 
     function isInSight(x, y, width, height) {
       if(x >= ctrX + cw || ctrX >= x + width) return false;
@@ -35,9 +35,7 @@ class Cell {
       return true;
     }
 
-    Cell.ctx.save();
-    Cell.ctx.scale(Zoom, Zoom);
-    Cell.ctx.translate(-ctrX, -ctrY);
+    CTX.translate(-ctrX, -ctrY);
 
     for(let z = 0; z < this.terrain.length; z++) {
       if(this.terrain[z]) {
@@ -66,7 +64,7 @@ class Cell {
         }
       }
     }
-    Cell.ctx.restore();
+    CTX.translate(ctrX, ctrY);
   }
 }
 Cell.list = new Map();

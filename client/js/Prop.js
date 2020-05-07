@@ -19,7 +19,7 @@ class Prop {
   }
 
   draw(x, y) {
-    Cell.ctx.drawImage(this.image, x * 32, y * 32);
+    CTX.drawImage(this.image, x * 32, y * 32);
   }
 }
 Prop.list = new Map();

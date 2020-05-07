@@ -26,7 +26,7 @@ class Tile {
 
   draw(x, y) {
     if(this.image)
-      Cell.ctx.drawImage(this.image, x * 32, y * 32, 32, 32);
+      CTX.drawImage(this.image, x * 32, y * 32, 32, 32);
   }
 }
 Tile.list = new Map();

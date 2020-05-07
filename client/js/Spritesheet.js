@@ -23,7 +23,7 @@ class Spritesheet {
   drawFrame(frame, x, y) {
     let sx = (frame % this.width) || this.width;
     let sy = Math.ceil(frame / this.width);
-    Cell.ctx.drawImage(this.image, (sx - 1) * 32, (sy - 1) * 32, 32, 32, x, y, 32, 32);
+    CTX.drawImage(this.image, (sx - 1) * 32, (sy - 1) * 32, 32, 32, x, y, 32, 32);
   }
 
   nextFrame(frame, dir) {
