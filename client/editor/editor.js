@@ -35,6 +35,8 @@ var TILE = [
 var CELL;
 var LEVEL;
 
+//const D = {up: "up", down: "down", left: "left", right: "right"};
+
 Tile.load(()=>{
   console.log("All tiles loaded !");
   Prop.load(()=>{
