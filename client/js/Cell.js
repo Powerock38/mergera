@@ -1,20 +1,17 @@
 class Cell {
-  static load(list, callback) {
-    let nbToLoad = list.length;
-    for(let cell of list) {
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", "./cells/" + cell + ".json", true);
-      xhr.onerror = ()=>{
-        console.error(xhr.statusText);
-      };
-      xhr.onload = ()=>{
-        let data = JSON.parse(xhr.responseText);
-        new Cell(cell, data.terrain, data.props, data.sky);
-        console.log("Loaded cell " + cell);
-        --nbToLoad === 0 && callback();
-      };
-      xhr.send(null);
-    }
+  static load(callback) {
+    fetch("./loading/cells.json").then(response => response.json())
+    .then(list => {
+      let nbToLoad = list.length;
+      for(const cell of list) {
+        fetch("./cells/" + cell + ".json").then(response => response.json())
+        .then(data => {
+          new Cell(cell, data.terrain, data.props, data.sky);
+          console.log("Loaded cell " + cell);
+          --nbToLoad === 0 && callback();
+        });
+      }
+    });
   }
 
   constructor(id, terrain, props, sky) {
@@ -30,7 +27,7 @@ class Cell {
     let cw = CTX.width / Zoom;
     let ch = CTX.height / Zoom;
 
-    function isInSight(x, y, width, height) {
+    const isInSight = (x, y, width, height)=>{
       if(x >= ctrX + cw || ctrX >= x + width) return false;
       if(y >= ctrY + ch || ctrY >= y + height) return false;
       return true;
@@ -43,9 +40,8 @@ class Cell {
         for(let y = Math.floor(ctrY / 32); y < Math.min(this.terrain[z].length, Math.ceil((ctrY + ch) / 32)); y++) {
           if(this.terrain[z][y]) {
             for(let x = Math.floor(ctrX / 32); x < Math.min(this.terrain[z][y].length, Math.ceil((ctrX + cw) / 32)); x++) {
-              if(Tile.list.has(this.terrain[z][y][x])) {
+              if(Tile.list.has(this.terrain[z][y][x]))
                 Tile.list.get(this.terrain[z][y][x]).draw(x, y);
-              }
             }
           }
         }

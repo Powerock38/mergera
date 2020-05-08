@@ -35,6 +35,17 @@ var TILE = [
 var CELL;
 var LEVEL;
 
+Tile.load(()=>{
+  console.log("All tiles loaded !");
+  Prop.load(()=>{
+    console.log("All props loaded !");
+    Spritesheet.load(()=>{
+      console.log("All sprites loaded !");
+      begin();
+    });
+  });
+});
+
 function begin() {
   hud.tilelist.ctx = hud.tilelist.getContext("2d");
   let width = Math.floor(hud.panel.clientWidth / 32);
@@ -66,7 +77,7 @@ function begin() {
 
 function loadCell(file) {
   CELL = new Cell(file);
-  LEVEL = CELL.defaultLevel;
+  LEVEL = 0;
   hud.level.innerHTML = LEVEL;
   drawCell();
   hud.canvas.style.display = "inline";
@@ -103,7 +114,6 @@ function loadCell(file) {
   hud.export.onclick = () => {
     cleanTerrainData();
     let data = {
-      defaultLevel: CELL.defaultLevel,
       terrain: CELL.terrain,
       props: CELL.props,
       entities: CELL.entities,

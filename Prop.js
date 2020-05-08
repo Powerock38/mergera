@@ -1,7 +1,9 @@
+const fs = require('fs');
 const sizeOf = require('image-size');
 
 class Prop {
-  static load(list, callback) {
+  static load(callback) {
+    let list = JSON.parse(fs.readFileSync("./client/loading/props.json"));
     let nbToLoad = list.length;
     for(let prop of list) {
       sizeOf("./client/props/" + prop.id + ".png", (err, dim) => {

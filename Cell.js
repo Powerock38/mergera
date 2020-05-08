@@ -4,7 +4,8 @@ const Prop = require("./Prop.js");
 const Container = require("./Container.js");
 
 class Cell {
-  static load(list, callback) {
+  static load(callback) {
+    let list = JSON.parse(fs.readFileSync("./client/loading/cells.json"));
     for(let cell of list) {
       let data = JSON.parse(fs.readFileSync("./client/cells/" + cell + ".json"));
       new Cell(cell, data);

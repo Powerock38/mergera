@@ -1,0 +1,17 @@
+[
+  {"id":"brick-stairs-up", "stairs":"up", "block":[["left","right"]]},
+  {"id":"brick-stairs-left", "stairs":"left", "block":[
+    ["up"],["up","down","left","right"]
+  ]},
+  {"id":"boat", "block":[
+    ["up","down","left","right"]
+  ]},
+  {"id":"cherrytree-trunk", "block":[
+    null,
+    ["up"]
+  ]},
+  {"id":"cherrytree-top"},
+  {"id":"wooden-chest-front","block":[
+    ["up","down","left","right"]
+  ]}
+]

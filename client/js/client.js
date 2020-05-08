@@ -1,57 +1,8 @@
-Tile.load([
-  "",
-  "tile000",
-  "tile001",
-  "tile003",
-  "tile005",
-  "tile006",
-  "tile007",
-  "tile008",
-  "tile009",
-  "tile010",
-  "tile011",
-  "tile012",
-  "tile013",
-  "dirt1",
-  "grass2",
-  "dirt1grass2_t-1",
-  "dirt1grass2_r-1",
-  "dirt1grass2_b-1",
-  "dirt1grass2_l-1",
-  "dirt1grass2_tr-1",
-  "dirt1grass2_tr-2",
-  "dirt1grass2_tl-1",
-  "dirt1grass2_tl-2",
-  "dirt1grass2_br-1",
-  "dirt1grass2_br-2",
-  "dirt1grass2_bl-1",
-  "dirt1grass2_bl-2",
-  "dirt1grass2_rl-1",
-  "dirt1grass2_tb-1",
-  "dirt1grass2_corner-1",
-  "dirt1grass2_corner-2",
-  "dirt1grass2_trbl-1",
-  "dirt1grass2_trbl-2",
-  "flooring-wood1",
-  "wall"
-],()=>{
+Tile.load(()=>{
   console.log("All tiles loaded !");
-  Prop.load([
-    "brick-stairs-up",
-    "brick-stairs-left",
-    "boat",
-    "tree",
-    "cherrytree-trunk",
-    "cherrytree-top",
-    "wooden-chest-front",
-  ],()=>{
+  Prop.load(()=>{
     console.log("All props loaded !");
-    Spritesheet.load([
-      "player",
-      "dog",
-      "bullet",
-      "aquaneko",
-    ],()=>{
+    Spritesheet.load(()=>{
       console.log("All sprites loaded !");
       Item.load([
         {id:"hat", name:"Hat", desc:"A weird hat, but a hat nonetheless"},
@@ -62,14 +13,11 @@ Tile.load([
         {id:"neko-egg", name:"Neko egg", desc:"An egg containing a cute creature"},
       ],()=>{
         console.log("All items loaded !");
-        Cell.load([
-          "test",
-          "test2"
-        ],()=>{
+        Cell.load(()=>{
           console.log("All cells loaded !");
           hud.loading.remove();
           begin();
-        })
+        });
       });
     });
   });
@@ -189,7 +137,7 @@ function begin() {
     }
   }
 
-  function keyInput(e, state) {
+  const keyInput = (e, state)=>{
     if(e.button !== undefined)
       e.key = e.button;
     for(let key of [
@@ -242,7 +190,7 @@ function begin() {
     }
   });
 
-  function update() {
+  const update = ()=>{
     if(cellId && selfId) {
       CTX.clearRect(0, 0, CTX.width, CTX.height);
       const Player = Cell.list.get(cellId).entities.get(selfId);

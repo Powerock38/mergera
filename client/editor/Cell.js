@@ -7,7 +7,6 @@ class Cell {
     	throw new Error("Can't load cell " + file + " (" + xhr.status + ").");
     let data = JSON.parse(xhr.responseText);
 
-    this.defaultLevel = data.defaultLevel;
     this.terrain = data.terrain;
     this.props = data.props;
     this.entities = data.entities;

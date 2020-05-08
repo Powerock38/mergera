@@ -1,20 +1,22 @@
 class Spritesheet {
-  static load(list, callback) {
-    let nbToLoad = list.length;
-    for(let sprite of list) {
-      let image = new Image();
-      image.src = "../sprites/" + sprite + ".png";
-      image.onload = () =>  {
-        new Spritesheet(image, sprite);
-        console.log("Loaded sprite " + sprite);
-        --nbToLoad === 0 && callback();
+  static load(callback) {
+    fetch("../loading/sprites.json").then(response => response.json())
+    .then(list => {
+      let nbToLoad = list.length;
+      for(const sprite of list) {
+        let image = new Image();
+        image.src = "../sprites/" + sprite + ".png";
+        image.onload = () =>  {
+          new Spritesheet(image, sprite);
+          console.log("Loaded sprite " + sprite);
+          --nbToLoad === 0 && callback();
+        }
       }
-    }
+    });
   }
 
   constructor(image, id) {
     this.image = image;
-    //this.id = /[^/]*$/.exec(this.image.src)[0].slice(0, -4);
     this.id = id;
     this.width = this.image.width / 32;
     this.height = this.image.height / 32;
