@@ -34,6 +34,7 @@ Tile.load([
   "dirt1grass2_corner-2",
   "dirt1grass2_trbl-1",
   "dirt1grass2_trbl-2",
+  "flooring-wood1",
   "wall"
 ],()=>{
   console.log("All tiles loaded !");
