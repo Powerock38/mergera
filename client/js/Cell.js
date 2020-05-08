@@ -9,7 +9,7 @@ class Cell {
       };
       xhr.onload = ()=>{
         let data = JSON.parse(xhr.responseText);
-        new Cell(cell, data.terrain, data.props);
+        new Cell(cell, data.terrain, data.props, data.sky);
         console.log("Loaded cell " + cell);
         --nbToLoad === 0 && callback();
       };
@@ -17,10 +17,11 @@ class Cell {
     }
   }
 
-  constructor(id, terrain, props) {
+  constructor(id, terrain, props, sky) {
     this.id = id;
     this.terrain = terrain;
     this.props = props;
+    this.sky = sky;
     this.entities = new Map();
     Cell.list.set(this.id, this);
   }
@@ -64,6 +65,17 @@ class Cell {
         }
       }
     }
+
+    // if(this.sky) {
+    //   const now = new Date(new Date().toUTCString().substr(0, 25));
+    //   //const x = now.getHours();
+    //   //const lightLevel = (x-4)/Math.sqrt(4*x*x - 32*x + 66.9) + (-x-4)/Math.sqrt(4*x*x + 32*x + 66.9);
+    //   const lightLevel = (x-4)/Math.sqrt((2*x-8)*(2*x-8)+2.9) + (-x-4)/Math.sqrt((-2*x-8)*(-2*x-8)+2.9);
+    //   console.log(lightLevel);
+    //   CTX.fillStyle = "rgba(0, 0, 0, "+lightLevel+")";
+    //   CTX.fillRect(0, 0, CTX.width, CTX.height);
+    // }
+
     CTX.translate(ctrX, ctrY);
   }
 }
