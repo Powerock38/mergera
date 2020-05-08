@@ -1,7 +1,7 @@
 class Cell {
   constructor(file) {
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", file, false);
+    xhr.open("GET", "../cells/"+file+".json", false);
     xhr.send(null);
     if(xhr.readyState != 4 || (xhr.status != 200 && xhr.status != 0))
     	throw new Error("Can't load cell " + file + " (" + xhr.status + ").");
