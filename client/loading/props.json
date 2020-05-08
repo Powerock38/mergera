@@ -18,6 +18,10 @@
     ["up"]
   ]},
   {"id":"cherrytree-top"},
+  {"id":"mushroom1"},
+  {"id":"mushroom2"},
+  {"id":"rock1", "block":[["up","down","left","right"]]},
+  {"id":"rock2", "block":[["up","down","left","right"]]},
   {"id":"wooden-chest-front","block":[
     ["up","down","left","right"]
   ]},
@@ -25,6 +29,28 @@
     ["up","down","left","right"]
   ]},
   {"id":"grave2","block":[
+    ["up","down","left","right"]
+  ]},
+  {"id":"firecamp","block":[
+    ["up","down","left","right"]
+  ]},
+  {"id":"sign1","block":[
+    ["up","down","left","right"]
+  ]},
+  {"id":"sign2","block":[
+    ["up","down","left","right"]
+  ]},
+  {"id":"sign3","block":[
+    ["up","down","left","right"]
+  ]},
+  {"id":"sign4","block":[
+    null,
+    ["up","down","left","right"]
+  ]},
+  {"id":"sign5","block":[
+    null,
+    null,
+    ["up","down","left","right"],
     ["up","down","left","right"]
   ]}
 ]
