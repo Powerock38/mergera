@@ -67,11 +67,11 @@ class Entity {
 
   get adjTiles() {
     return {
-      on:    this.cell.terrain[this.z][this.y]?.[this.x],
-      up:    this.cell.terrain[this.z][this.y - 1]?.[this.x],
-      down:  this.cell.terrain[this.z][this.y + 1]?.[this.x],
-      right: this.cell.terrain[this.z][this.y]?.[this.x + 1],
-      left:  this.cell.terrain[this.z][this.y]?.[this.x - 1]
+      on:    this.cell.terrain[this.z]?.[this.y]?.[this.x],
+      up:    this.cell.terrain[this.z]?.[this.y - 1]?.[this.x],
+      down:  this.cell.terrain[this.z]?.[this.y + 1]?.[this.x],
+      right: this.cell.terrain[this.z]?.[this.y]?.[this.x + 1],
+      left:  this.cell.terrain[this.z]?.[this.y]?.[this.x - 1]
     };
   }
 
