@@ -65,10 +65,10 @@
     "z": 0
   }],
   "teleporters": [{
-    "cell": "test2",
+    "cell": "endlesswoodland",
     "x": 0,
-    "y": 6,
-    "z": 0,
+    "y": 42,
+    "z": 1,
     "facing": "right",
     "x1": 14,
     "y1": 6,
