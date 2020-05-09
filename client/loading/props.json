@@ -9,7 +9,7 @@
   {"id":"stairs-wood-right", "stairs":"right", "block":[
     ["up"],["up","down","left","right"]
   ]},
-  {"id":"stairs-wood-up", "stairs":"left", "block":[["left","right"]]},
+  {"id":"stairs-wood-up", "stairs":"up", "block":[["left","right"]]},
   {"id":"boat", "block":[["up","down","left","right"]]},
   {"id":"cherrytree", "zOffset":[1, 1, 1, 1, 1, 1, 1, 1, 1], "block":[
     null,null,null,
@@ -47,11 +47,11 @@
   {"id":"sign3","block":[
     ["up","down","left","right"]
   ]},
-  {"id":"sign4","block":[
+  {"id":"sign4", "zOffset":[1],"block":[
     null,
     ["up","down","left","right"]
   ]},
-  {"id":"sign5","block":[
+  {"id":"sign5", "zOffset":[1, 1],"block":[
     null,
     null,
     ["up","down","left","right"],
