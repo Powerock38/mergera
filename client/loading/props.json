@@ -3,21 +3,25 @@
   {"id":"brick-stairs-left", "stairs":"left", "block":[
     ["up"],["up","down","left","right"]
   ]},
-  {"id":"stairs-wood-left", "stairs":"left", "block":[
-    ["up"],["up","down","left","right"]
+  {"id":"stairs-wood-left", "stairs":"left", "zOffset":[1], "block":[
+    ["up","down"], ["up","down","left"]
   ]},
   {"id":"stairs-wood-right", "stairs":"right", "block":[
     ["up"],["up","down","left","right"]
   ]},
   {"id":"stairs-wood-up", "stairs":"left", "block":[["left","right"]]},
-  {"id":"boat", "block":[
-    ["up","down","left","right"]
+  {"id":"boat", "block":[["up","down","left","right"]]},
+  {"id":"cherrytree", "zOffset":[1, 1, 1, 1, 1, 1, 1, 1, 1], "block":[
+    null,null,null,
+    null,null,null,
+    null,null,null,
+    null,["up"]
   ]},
-  {"id":"cherrytree-trunk", "block":[
-    null,
-    ["up"]
+  {"id":"tree", "zOffset":[1, 1, 1, 1, 1, 1], "block":[
+    null,null,null,
+    null,null,null,
+    null,["up"]
   ]},
-  {"id":"cherrytree-top"},
   {"id":"wooden-chest-front","block":[
     ["up","down","left","right"]
   ]},

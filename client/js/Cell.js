@@ -37,6 +37,7 @@ class Cell {
 
     for(let z = 0; z < this.terrain.length; z++) {
       if(this.terrain[z]) {
+
         for(let y = Math.floor(ctrY / 32); y < Math.min(this.terrain[z].length, Math.ceil((ctrY + ch) / 32)); y++) {
           if(this.terrain[z][y]) {
             for(let x = Math.floor(ctrX / 32); x < Math.min(this.terrain[z][y].length, Math.ceil((ctrX + cw) / 32)); x++) {
@@ -46,13 +47,17 @@ class Cell {
           }
         }
 
-        if(this.props[z])
-          for(let prop of this.props[z]) {
-            const propObj = Prop.list.get(prop.id);
-            if(isInSight(prop.x * 32, prop.y * 32, propObj.image.width, propObj.image.height)) {
-              propObj.draw(prop.x, prop.y);
+        for(let prop of this.props) {
+          const propObj = Prop.list.get(prop.id);
+          const tiles = propObj.width * propObj.height;
+          if(isInSight(prop.x * 32, prop.y * 32, propObj.width * 32, propObj.height * 32)) {
+            for(let tileNb = 0; tileNb < tiles; tileNb++) {
+              if(z === propObj.getZ(prop.z, tileNb)) {
+                propObj.draw(tileNb, prop.x, prop.y);
+              }
             }
           }
+        }
 
         for(let entity of this.entities.values()) {
           if(entity.z === z && isInSight(entity.animX, entity.animY, entity.sprite.width * 32, entity.sprite.height * 32)) {
@@ -71,7 +76,6 @@ class Cell {
     //   CTX.fillStyle = "rgba(0, 0, 0, "+lightLevel+")";
     //   CTX.fillRect(0, 0, CTX.width, CTX.height);
     // }
-
     CTX.translate(ctrX, ctrY);
   }
 }

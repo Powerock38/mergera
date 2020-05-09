@@ -33,6 +33,7 @@ var TILE = [
   {tile:"", pressing:false, color:"purple"}
 ];
 var CELL;
+var CTX;
 var LEVEL;
 
 //const D = {up: "up", down: "down", left: "left", right: "right"};
@@ -70,7 +71,7 @@ function begin() {
   });
 
   hud.canvas.ctx = hud.canvas.getContext("2d");
-  Cell.ctx = hud.canvas.ctx;
+  CTX = hud.canvas.ctx;
   hud.canvas.style.display = "none";
   drawTileList();
   drawSelect();
@@ -200,8 +201,8 @@ function selectProp(id) {
   PROP = id;
   hud.canvas.classList.remove("deleteSelected");
   hud.removeProp.classList.remove("selected");
-  for(let i of Object.keys(Prop.list)) {
-    hud.proplist.querySelector("#" + Prop.list[i].id).classList.remove("selected");
+  for(let prop of Prop.list.values()) {
+    hud.proplist.querySelector("#" + prop.id).classList.remove("selected");
   }
   if(id === "DELETE_PROP") {
     hud.canvas.classList.add("deleteSelected");
@@ -211,39 +212,25 @@ function selectProp(id) {
   }
 }
 
-function getProp(x, y, z) {
-  for(let prop of CELL.props[z]) {
-    let propObj = Prop.list[prop.id];
-    if(x >= prop.x && x < prop.x + propObj.width
-    && y >= prop.y && y < prop.y + propObj.height) {
-      let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
-      return prop;
-    }
-  }
-}
-
 function putProp(canvas, e) {
   let pos = getCursorTileXY(canvas, e);
+
   if(PROP === "DELETE_PROP") {
-    let index = CELL.props[LEVEL].indexOf(getProp(pos.x, pos.y, LEVEL));
-    if(index !== -1) {
-      CELL.props[LEVEL].splice(index, 1);
-    }
+    const index = CELL.getProp(pos.x, pos.y, LEVEL)?.index;
+    if(index != null)
+      CELL.props.splice(index, 1);
     selectProp(null);
     return;
   }
 
-  if(CELL.props[LEVEL] === undefined)
-    CELL.props[LEVEL] = [];
-
-  CELL.props[LEVEL].push({id:PROP, x: pos.x, y: pos.y});
+  CELL.props.push({id:PROP, x: pos.x, y: pos.y, z:LEVEL});
   selectProp(null);
 }
 
 function drawProplist() {
-  for(let i of Object.keys(Prop.list)) {
-    let img = hud.proplist.appendChild(Prop.list[i].image);
-    img.id = Prop.list[i].id;
+  for(let prop of Prop.list.values()) {
+    let img = hud.proplist.appendChild(prop.image);
+    img.id = prop.id;
     img.onclick = () => {
       selectProp(img.id);
     }
@@ -325,12 +312,12 @@ function drawSelect() {
 }
 
 function drawCell() {
-  Cell.ctx.clearRect(0, 0, Cell.ctx.width, Cell.ctx.height);
+  CTX.clearRect(0, 0, CTX.width, CTX.height);
   let max = getMax();
   hud.canvas.width = Math.max(hud.canvasContainer.clientWidth, (max.x + 10) * 32);
   hud.canvas.height = Math.max(hud.canvasContainer.clientHeight, (max.y + 10) * 32);
-  Cell.ctx.width = hud.canvas.width;
-  Cell.ctx.height = hud.canvas.width;
+  CTX.width = hud.canvas.width;
+  CTX.height = hud.canvas.width;
 
   if(hud.drawAll.checked) {
     CELL.draw();

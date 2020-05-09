@@ -21,6 +21,7 @@ class Entity {
     this.z = z;
     this.animX = this.x * 32;
     this.animY = this.y * 32;
+    // this.animZ = this.z * 32;
     if(this.cell !== cell) { //if changing cell
       if(this.cell) this.cell.removeEntity(this.id);
       this.cell = cell;
@@ -82,32 +83,8 @@ class Entity {
     else if(this.facing === D.left)  return {x: this.x - 1, y: this.y};
   }
 
-  updatePosition() {
-    if(this.going === D.up) {
-      this.animY -= this.stats.speed;
-      if(this.animY <= (this.y - 1) * 32) {
-        this.going = null;
-        this.afterMove(D.up);
-      }
-    } else if(this.going === D.down) {
-      this.animY += this.stats.speed;
-      if(this.animY >= (this.y + 1) * 32) {
-        this.going = null;
-        this.afterMove(D.down);
-      }
-    } else if(this.going === D.left) {
-      this.animX -= this.stats.speed;
-      if(this.animX <= (this.x - 1) * 32) {
-        this.going = null;
-        this.afterMove(D.left);
-      }
-    } else if(this.going === D.right) {
-      this.animX += this.stats.speed;
-      if(this.animX >= (this.x + 1) * 32) {
-        this.going = null;
-        this.afterMove(D.right);
-      }
-    }
+  update() { //override in Player
+    this.updatePosition();
   }
 
   updateTP() {
@@ -128,24 +105,79 @@ class Entity {
     }
   }
 
-  update() { //override in Player
-    this.updatePosition();
+  updatePosition() {
+    const frontProp = this.adjProps[this.facing];
+    if(this.going === D.up) {
+      this.animY -= this.stats.speed;
+      if(this.animY <= (this.y - 1) * 32) {
+        this.going = null;
+        this.afterMove(D.up);
+      }
+    } else if(this.going === D.down) {
+      this.animY += this.stats.speed;
+      if(this.animY >= (this.y + 1) * 32) {
+        this.going = null;
+        this.afterMove(D.down);
+      }
+    } else if(this.going === D.left) {
+      this.animX -= this.stats.speed;
+      if(frontProp?.stairs === D.left)
+        this.animY -= this.stats.speed;
+      else if(this.adjProps.on?.stairs === D.right)
+        this.animY += this.stats.speed;
+      if(this.animX <= (this.x - 1) * 32) {
+        this.going = null;
+        this.afterMove(D.left);
+      }
+    } else if(this.going === D.right) {
+      this.animX += this.stats.speed;
+      if(frontProp?.stairs === D.right)
+        this.animY -= this.stats.speed;
+      else if(this.adjProps.on?.stairs === D.left)
+        this.animY += this.stats.speed;
+      if(this.animX >= (this.x + 1) * 32) {
+        this.going = null;
+        this.afterMove(D.right);
+      }
+    }
   }
 
   afterMove(dir) {
-    if(dir === D.up) {
-      this.y--;
-    } else if(dir === D.down) {
-      this.y++;
-    } else if(dir === D.left) {
-      this.x--;
-    } else if(dir === D.right) {
-      this.x++;
+    if(dir === D.up || dir === D.down) {
+      if(dir === D.up) this.y--;
+      else if(dir === D.down) this.y++;
+
+      if(this.belowProps.on?.stairs)
+        this.z--;
+
+    } else if(dir === D.left || dir === D.right) {
+      if(dir === D.left) this.x--;
+      else if(dir === D.right) this.x++;
+
+      if(this.adjProps[Do[dir]]?.stairs === Do[dir] && this.adjProps[Do[dir]]?.offset === 1) {
+        this.y++;
+        this.z--;
+      }
     }
-    if(this.belowProps.on?.stairs)
-      this.z--;
     this.animX = this.x * 32;
     this.animY = this.y * 32;
+    this.updateTP();
+  }
+
+  move(dir) { //override in Player
+    if(this.facing !== dir) {
+      this.facing = dir;
+    } else if(this.canMove(dir)) {
+      if((dir === D.up || dir === D.down) && this.adjProps.on?.stairs === dir)
+        this.z++;
+      else if((dir === D.left || dir === D.right)
+          && this.adjProps[dir]?.stairs === dir
+          && !this.adjProps[dir]?.offset) {
+          this.y--;
+          this.z++;
+      }
+      this.going = dir;
+    }
     this.updateTP();
   }
 
@@ -153,7 +185,7 @@ class Entity {
     if(this.going) return false;
 
     let onProp = this.adjProps.on;
-    if(onProp?.stairs === dir)
+    if(onProp?.stairs === dir || onProp?.stairs === Do[dir])
       return true;
 
     if(onProp?.block?.[onProp.tileNb]?.includes(dir))
@@ -163,21 +195,9 @@ class Entity {
     let frontProp = this.adjProps[dir];
     can = Boolean(this.adjTiles[dir]) || this.belowProps[dir]?.stairs;
     if(frontProp?.block?.[frontProp.tileNb]) {
-      let od = {"up":D.down, "down":D.up, "left":D.right, "right":D.left}[dir];
-      can = !frontProp.block[frontProp.tileNb].includes(od);
+      can = !frontProp.block[frontProp.tileNb].includes(Do[dir]);
     }
     return can;
-  }
-
-  move(dir) { //override in Player
-    if(this.facing !== dir) {
-      this.facing = dir;
-    } else if(this.canMove(dir)) {
-      this.going = dir;
-      if(this.adjProps.on?.stairs === dir)
-        this.z++;
-    }
-    this.updateTP();
   }
 
   //NET CODE

@@ -17,6 +17,8 @@ SOCKET_LIST = new Map();
 DEBUG = true;
 
 D = {up: "up", down: "down", left: "left", right: "right"};
+Do = {up:D.down, down:D.up, left:D.right, right:D.left};
+
 const Entity = require("./Entity.js");
 const Player = require("./Player.js");
 const Cell = require("./Cell.js");

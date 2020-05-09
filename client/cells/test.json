@@ -41,26 +41,11 @@
     ]
   ],
   "props": [
-    [{
-      "id": "boat",
-      "x": 2,
-      "y": 3
-    }, {
-      "id": "cherrytree-trunk",
-      "x": 10,
-      "y": 5
-    }, {
-      "id": "brick-stairs-left",
-      "x": 3,
-      "y": 7
-    }, {
-      "id": "brick-stairs-up",
-      "x": 0,
-      "y": 8
-    }, {
-      "id": "wooden-chest-front",
-      "x": 7,
-      "y": 8,
+    {"id": "tree", "x": 2, "y": 3, "z":0},
+    {"id": "cherrytree", "x": 10, "y": 2, "z":0},
+    {"id": "stairs-wood-left", "x": 3, "y": 7, "z":0},
+    {"id": "brick-stairs-up", "x": 0, "y": 8, "z":0},
+    {"id": "wooden-chest-front", "x": 7, "y": 8, "z":0,
       "chest": {
         "size": 30,
         "items": [
@@ -71,12 +56,7 @@
           {"id": "sword", "amount": 1}
         ]
       }
-    }],
-    [{
-      "id": "cherrytree-top",
-      "x": 10,
-      "y": 2
-    }]
+    }
   ],
   "entities": [{
     "id": "dog",

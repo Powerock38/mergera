@@ -20,6 +20,13 @@ class Prop {
     this.height = height / 32;
     Prop.list.set(this.id, this);
   }
+
+  getZ(z, tileNb) {
+    if(this.zOffset?.[tileNb])
+      return z + this.zOffset[tileNb];
+    else
+      return z;
+  }
 }
 Prop.list = new Map();
 

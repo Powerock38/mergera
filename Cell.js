@@ -19,12 +19,10 @@ class Cell {
     this.resetPacks();
     this.terrain = data.terrain;
     this.props = data.props;
-    for(let z in this.props) {
-      for(let prop of this.props[z]) {
-        if(prop.chest) {
-          const id = this.id + "-" + prop.id + "-" + prop.x + "-" + prop.y + "-" + z;
-          prop.container = new Container(prop.chest.size, prop.chest.items, id);
-        }
+    for(const prop of this.props) {
+      if(prop.chest) {
+        const id = this.id + "-" + prop.id + "-" + prop.x + "-" + prop.y + "-" + prop.z;
+        prop.container = new Container(prop.chest.size, prop.chest.items, id);
       }
     }
     this.teleporters = data.teleporters;
@@ -36,15 +34,15 @@ class Cell {
   }
 
   getProp(x, y, z) {
-    if(this.props[z])
-      for(let prop of this.props[z]) {
-        let propObj = Prop.list.get(prop.id);
-        if(x >= prop.x && x < prop.x + propObj.width
-        && y >= prop.y && y < prop.y + propObj.height) {
-          let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
-          return {...propObj, tileNb: tileNb, ...prop};
-        }
+    for(const prop of this.props) {
+      const propObj = Prop.list.get(prop.id);
+      if(x >= prop.x && x < prop.x + propObj.width
+      && y >= prop.y && y < prop.y + propObj.height) {
+        const tileNb = (x - prop.x) + propObj.width * (y - prop.y);
+        if(z === propObj.getZ(prop.z, tileNb))
+          return {...propObj, ...prop, tileNb: tileNb, offset: propObj.zOffset?.[tileNb]};
       }
+    }
   }
 
   getEntity(x, y, z) {

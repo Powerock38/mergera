@@ -11,18 +11,16 @@ class Cell {
     this.props = data.props;
     this.entities = data.entities;
     this.teleporters = data.teleporters;
-
-    Cell.list[this.id] = this;
   }
 
   getProp(x, y, z) {
-    if(this.props[z])
-    for(let prop of this.props[z]) {
-      let propObj = Prop.list[prop.id];
+    for(const prop of this.props) {
+      const propObj = Prop.list.get(prop.id);
       if(x >= prop.x && x < prop.x + propObj.width
       && y >= prop.y && y < prop.y + propObj.height) {
-        let tileNb = (x - prop.x) + propObj.width * (y - prop.y);
-        return {...propObj, tileNb: tileNb};
+        const tileNb = (x - prop.x) + propObj.width * (y - prop.y);
+        if(z === propObj.getZ(prop.z, tileNb))
+          return {...propObj, ...prop, tileNb: tileNb, index: this.props.indexOf(prop)};
       }
     }
   }
@@ -39,32 +37,22 @@ class Cell {
         if(this.terrain[z][y]) {
           for(let x = 0; x < this.terrain[z][y].length; x++) {
             if(Tile.list[this.terrain[z][y][x]])
-              Tile.list[this.terrain[z][y][x]].draw(Cell.ctx, x, y);
+              Tile.list[this.terrain[z][y][x]].draw(CTX, x, y);
           }
         }
       }
 
-      if(this.props[z])
-        for(let prop of this.props[z])
-          Prop.list[prop.id].draw(Cell.ctx, prop.x, prop.y);
+      for(let prop of this.props) {
+        const propObj = Prop.list.get(prop.id);
+        const tiles = propObj.width * propObj.height;
+        for(let tileNb = 0; tileNb < tiles; tileNb++) {
+          if(z === propObj.getZ(prop.z, tileNb)) {
+            propObj.draw(tileNb, prop.x, prop.y);
+          }
+        }
+      }
 
-      // for(let i in this.entities) {
-      //   let entity = this.entities[i];
-      //   if(entity.z === z)
-      //     entity.draw();
-      // }
+      // draw entities maybe one day
     }
   }
-
-  // drawTileStack(x, y) {
-  //   for(let z = 0; z < this.terrain.length; z++) {
-  //     // for(let entity of this.entities[z]) {
-  //     //   if(entity.x = x && entity.y = y)
-  //     //     entity.draw();
-  //     // }
-  //     if(Tile.notNull(this.terrain[z][y][x]))
-  //       Tile.list[this.terrain[z][y][x]].draw(Cell.ctx, x * 32, y * 32);
-  //   }
-  // }
 }
-Cell.list = {};
