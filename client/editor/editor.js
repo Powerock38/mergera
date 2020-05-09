@@ -6,8 +6,6 @@ for(let hudElem of [
   "tilelist",
   "proplist",
   "tile",
-  "levelUp",
-  "levelDown",
   "drawAll",
   "level",
   "startmenu",
@@ -68,6 +66,22 @@ function begin() {
 
   hud.tilelist.addEventListener("mouseout", function(e) {
     drawListAndHover(this, e);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowUp':
+        levelUp();
+        break;
+      
+      case 'ArrowDown':
+        levelDown();
+        break;
+
+      case 'x':
+        selectProp('DELETE_PROP');
+        break;
+    }
   });
 
   hud.canvas.ctx = hud.canvas.getContext("2d");
@@ -181,23 +195,28 @@ function loadCell(file) {
         CELL.terrain[z][y].shift();
     drawCell();
   }
+}
 
-  hud.levelUp.onclick = () => {
-    LEVEL++;
+function levelUp() {
+  LEVEL++;
+  drawCell();
+  hud.level.innerHTML = LEVEL;
+}
+
+function levelDown() {
+  if (LEVEL !== 0) {
+    LEVEL--;
     drawCell();
     hud.level.innerHTML = LEVEL;
-  }
-
-  hud.levelDown.onclick = () => {
-    if(LEVEL !== 0) {
-      LEVEL--;
-      drawCell();
-      hud.level.innerHTML = LEVEL;
-    }
   }
 }
 
 function selectProp(id) {
+  if(id === PROP) {
+    selectProp(null);
+    return;
+  }
+
   PROP = id;
   hud.canvas.classList.remove("deleteSelected");
   hud.removeProp.classList.remove("selected");
