@@ -1,13 +1,13 @@
 [
   {"id":"brick-stairs-up", "stairs":"up", "block":[["left","right"]]},
   {"id":"brick-stairs-left", "stairs":"left", "block":[
-    ["up"],["up","down","left","right"]
+    ["up","down"], ["up","down","left"]
   ]},
   {"id":"stairs-wood-left", "stairs":"left", "zOffset":[1], "block":[
     ["up","down"], ["up","down","left"]
   ]},
-  {"id":"stairs-wood-right", "stairs":"right", "block":[
-    ["up"],["up","down","left","right"]
+  {"id":"stairs-wood-right", "stairs":"right", "zOffset":[1], "block":[
+    ["up","down"],["up","down","right"]
   ]},
   {"id":"stairs-wood-up", "stairs":"up", "block":[["left","right"]]},
   {"id":"boat", "block":[["up","down","left","right"]]},
