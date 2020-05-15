@@ -63,5 +63,19 @@
     null,
     ["up","down","left","right"],
     ["up","down","left","right"]
+  ]},
+  {"id":"chair1_t"},{"id":"chair1_b"},{"id":"chair1_l"},{"id":"chair1_r"},
+  {"id":"table1","block":[["up","down","left","right"],["up","down","left","right"]]},
+  {"id":"table2","block":[["up","down","left","right"]]},
+  {"id":"table3","block":[["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"]]},
+  {"id":"bed1","block":[["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"]]},
+  {"id":"house1_1","zOffset":[
+    1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1
+    ],"block":[
+    null,null,null,null,null,null,null,null,
+    null,null,null,null,null,null,null,null,
+    ["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],
+    ["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],null,["up","down","left","right"],["up","down","left","right"],["up","down","left","right"],["up","down","left","right"]
   ]}
 ]
