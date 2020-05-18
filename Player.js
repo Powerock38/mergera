@@ -6,22 +6,41 @@ const Item = require("./Item.js");
 
 class Player extends Entity {
   static onConnect(ws) {
-    let player = new Player(ws, ws.id, {sprite:"player", hp:20, speed:4}, Cell.list.get("test"), 7, 7, 0);
+    ws.emit("selfId", ws.id);
 
+    let player = new Player(ws, ws.id, {sprite:"player", hp:20, speed:4}, Cell.list.get("test"), 7, 7, 0);
+    
     ws.on("keyPress", (data)=>{
       player.pressing[data.input] = data.state;
     });
-
-    ws.emit("selfId", player.id);
+    
+    ws.on("chatmsg", (data)=>{
+      const msg = data.m.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+      switch(data.p) {
+        case 0:
+          Player.broadcastMessage(player.id + " : " + msg);
+          break;
+        
+        case 1:
+          player.cell.chatMessage(player.id + " : " + msg);
+          break;
+      }
+    });
 
     player.inventory.update();
 
-    Player.lastplayer = player;
+    if(DEBUG)
+      Player.lastplayer = player;
   }
 
   static onDisconnect(ws) {
     Player.list.get(ws.id).cell.removeEntity(ws.id);
     Player.list.delete(ws.id);
+  }
+
+  static broadcastMessage(msg) {
+    for (const player of Player.list.values())
+      player.ws.emit("chat", { c: 0, m: msg });
   }
 
   constructor(ws, id, sprite, cell, x, y, z) {

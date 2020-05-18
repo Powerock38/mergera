@@ -32,7 +32,12 @@ for(let hudElem of [
   "container",
   "containerAround",
   "coos",
-  "cmd",
+  "chatdiv",
+  "chatinput",
+  "globalbox",
+  "localbox",
+  "global",
+  "local",
 ]) hud[hudElem] = document.getElementById(hudElem);
 
 var Zoom = 2;
@@ -65,9 +70,9 @@ function begin() {
   }
 
   connection.onmessage = (message)=>{
-    let msg = JSON.parse(message.data);
-    let ev = msg.a[0];
-    let data = msg.a[1];
+    const msg = JSON.parse(message.data);
+    const ev = msg.a[0];
+    const data = msg.a[1];
 
     switch(ev) {
       case 'connect':
@@ -132,12 +137,23 @@ function begin() {
           container.draw();
         break;
 
+      case 'chat':
+        const msg = document.createElement("li");
+        msg.innerHTML = data.m;
+        const room = ["globalbox", "localbox"][data.c];
+        hud[room].appendChild(msg);
+        break;
+
       default:
         console.error("erroned message received : " + ev);
     }
   }
 
   const keyInput = (e, state)=>{
+    if(hud.chatinput === document.activeElement)
+      return;
+
+
     if(e.button !== undefined)
       e.key = e.button;
     for(let key of [
@@ -173,15 +189,24 @@ function begin() {
   document.addEventListener('keypress', (e) => {
     switch(e.key) {
       case 'e':
-        Inventory.main.toggle();
+        if (hud.chatinput !== document.activeElement)
+          Inventory.main.toggle();
         break;
 
       case 'Enter':
-        connection.emit("eval", hud.cmd.value);
+        if (hud.chatinput === document.activeElement)
+          if (hud.chatinput.value[0] === "!")
+           connection.emit("eval", hud.chatinput.value);
+          else {
+            connection.emit("chatmsg", { p: (hud.local.checked ? 1 : 0), m: hud.chatinput.value});
+            hud.chatinput.value = "";
+          }
         break;
     }
   });
 
+  hud.chatdiv.addEventListener("mousedown", e => e.stopPropagation());
+  
   document.addEventListener("wheel", e => {
     if(e.deltaY < 0) {
       Inventory.main.previousHBSlot();

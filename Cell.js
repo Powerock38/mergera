@@ -33,6 +33,19 @@ class Cell {
     Cell.list.set(this.id, this);
   }
 
+  chatMessage(msg) {
+    for (const player of this.players.values())
+      player.ws.emit("chat", { c: 1, m: msg });
+  }
+
+  get players() {
+    let players = new Map();
+    for(const entity of this.entities.values())
+      if(entity.ws !== undefined)
+        players.set(entity.id, entity);
+    return players;
+  }
+
   getProp(x, y, z) {
     for(const prop of this.props) {
       const propObj = Prop.list.get(prop.id);

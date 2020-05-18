@@ -1,3 +1,4 @@
+process.title = "tile-rpg-server"
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);

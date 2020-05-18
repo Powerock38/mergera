@@ -15,17 +15,34 @@
     <script src="js/client.js" charset="utf-8" defer></script>
   </head>
   <body oncontextmenu="return false;">
+
     <h1 id="loading">Loading...</h1>
+
     <div id="hud">
       <div id="inventoryAround">
         <div id="inventory"></div>
       </div>
+
       <span id="coos"></span>
-      <input type="text" id="cmd" value="">
+
+      <div id="chatdiv">
+        <input type="radio" name="rooms" id="global" checked/>
+        <label for="global">Global</label>
+        
+        <input type="radio" name="rooms" id="local"/>
+        <label for="local">Local</label>
+        
+        <ul class="tab chatbox" id="globalbox"></ul>
+        <ul class="tab chatbox" id="localbox"></ul>
+
+        <input type="text" id="chatinput" value="">
+      </div>
+
       <div id="containerAround">
         <div id="container"></div>
       </div>
     </div>
+
     <canvas id="mainframe"></canvas>
   </body>
 </html>
