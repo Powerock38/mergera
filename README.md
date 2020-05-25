@@ -1,5 +1,8 @@
 # Mergera - A 2D MMORPG in your browser
 
+build server with  
+`npm install`
+
 run server with  
 `node .`
 
