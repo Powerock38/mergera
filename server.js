@@ -88,7 +88,7 @@ function packIsNotEmpty(pack) {
   return !empty;
 }
 
-const PORT = Number(process.argv[2]) || 2000
+const PORT = Number(process.argv[2]) || 2000;
 server.listen(PORT);
 console.log("Server started on port " + PORT);
 

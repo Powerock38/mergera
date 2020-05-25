@@ -59,7 +59,7 @@ var selfId;
 var cellId;
 
 function begin() {
-  connection = new WebSocket('ws://localhost:2000');
+  connection = new WebSocket('ws://' + window.location.host);
 
   //custom function
   connection.emit = (ev, data, channel)=>{
