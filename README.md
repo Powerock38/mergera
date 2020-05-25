@@ -1,7 +1,7 @@
 # tile-rpg
 
-run with
-node .
+run server with  
+`node .`
 
-connect to
-localhost:2000
+connect to client at  
+https://localhost:2000
