@@ -1,4 +1,4 @@
-# tile-rpg
+# Mergera - A 2D MMORPG in your browser
 
 run server with  
 `node .`
