@@ -88,8 +88,9 @@ function packIsNotEmpty(pack) {
   return !empty;
 }
 
-server.listen(2000);
-console.log("Server started");
+const PORT = Number(process.argv[2]) || 2000
+server.listen(PORT);
+console.log("Server started on port " + PORT);
 
 var MAINLOOP;
 function begin() {
