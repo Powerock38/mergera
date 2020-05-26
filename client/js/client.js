@@ -142,6 +142,7 @@ function begin() {
         msg.innerHTML = data.m;
         const room = ["globalbox", "localbox"][data.c];
         hud[room].appendChild(msg);
+        hud[room].scrollTop = hud[room].scrollHeight;
         break;
 
       default:
@@ -197,7 +198,7 @@ function begin() {
         if (hud.chatinput === document.activeElement)
           if (hud.chatinput.value[0] === "!")
            connection.emit("eval", hud.chatinput.value);
-          else {
+          else if (hud.chatinput.value) {
             connection.emit("chatmsg", { p: (hud.local.checked ? 1 : 0), m: hud.chatinput.value});
             hud.chatinput.value = "";
           }

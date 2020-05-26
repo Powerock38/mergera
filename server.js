@@ -2,7 +2,6 @@ process.title = "tile-rpg-server"
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
-const WebSocket = require('ws');
 
 app.get('/',(req,res)=>{
   res.sendFile(__dirname + '/client/index.html');

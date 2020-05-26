@@ -16,13 +16,15 @@ class Player extends Entity {
     
     ws.on("chatmsg", (data)=>{
       const msg = data.m.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+      const prompt = player.id.substring(0, 5) + " : ";
+      const message = prompt + msg;
       switch(data.p) {
         case 0:
-          Player.broadcastMessage(player.id + " : " + msg);
+          Player.broadcastMessage(message);
           break;
         
         case 1:
-          player.cell.chatMessage(player.id + " : " + msg);
+          player.cell.chatMessage(message);
           break;
       }
     });
