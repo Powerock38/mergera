@@ -48,19 +48,42 @@ img {
   left: 0;
   width: 25%;
   height: 25%;
+  font-size: 16px;
+}
+#chatdiv:hover, #chatdiv:focus-within {
+  border-top: 1px solid #999F;
+  border-right: 1px solid #999F;
   background-color: rgba(25, 25, 25, 0.6);
+}
+#chatdiv:hover label, #chatdiv:focus-within label {
+  display: inline-block;
 }
 
 input[name="rooms"] {
    display: none;
 }
 
-input[name="rooms"] + label { 
-  display: inline-block;
-  border: 1px solid #999;
+.chatTabs {
+  position: absolute;
+  top: calc(-2px - 8px - 1em);
+}
+input[name="rooms"] + label {
+  display: none;
+  height: 1em;
+  font-size: 1em;
+  border: 1px solid #999F;
   padding: 4px 12px;
+  margin-right: 4px;
   border-radius: 4px 4px 0 0;
   background-color: rgba(25, 25, 25, 0.6);
+}
+input[name="rooms"]:checked + label {
+  border-bottom: 1px solid rgba(25, 25, 25, 1);
+}
+input[name="rooms"] + label:first-of-type {
+  border-left: none;
+  border-radius: 0 4px 0 0;
+  padding-left: 6px;
 }
 
 .tab {
@@ -72,12 +95,9 @@ input[name="rooms"] + label {
   overflow-y: auto;
 }
 
-input[name="rooms"]:checked + label {
-  border-bottom: none;
-}
 
 #global:checked ~ .tab#globalbox,
-#local:checked ~ .tab#localbox { 
+#local:checked ~ .tab#localbox {
   display: block;
 }
 
@@ -98,9 +118,6 @@ input[name="rooms"]:checked + label {
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: rgba(255, 25, 25, 0.6);
-  padding: 16px;
-  border-radius: 16px;
 }
 
 #containerAround {
@@ -109,28 +126,27 @@ input[name="rooms"]:checked + label {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.6);
-  padding: 16px;
-  border-radius: 16px;
 }
 
 #container, #inventory {
   border: 1px solid black;
   display: flex;
   flex-wrap: wrap;
-  width: 660px;
+  max-width: calc(10 * 64px + 9 * 4px + 2 * 2px);
 }
 
 .item {
+  background-color: rgba(25, 25, 25, 0.5);
   position: relative;
   display: inline-block;
-  border: 1px solid black;
+  border: 2px solid #AFAFAF;
   width: 64px;
   height: 64px;
 }
 
 .selected {
-  background-color: rgba(25, 25, 25, 0.6);
+  background-color: rgba(55, 55, 55, 0.5);
+  border: 2px solid #DFDFDF;
 }
 
 .item img, .item .amount {
